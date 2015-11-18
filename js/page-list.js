@@ -10,7 +10,7 @@
       switch (event.type) {
         case 'focusOn':
           if (event.detail.page == "page-list") {
-            window.dispatchEvent(new CustomEvent('getItem', {
+            window.dispatchEvent(new CustomEvent('getAllItems', {
               detail:
               {
                 source: 'page-list',
@@ -19,7 +19,7 @@
             }));
           }
           break;
-        case 'getItem':
+        case 'getAllItems':
           if (event.detail.target == 'page-list') {
             var items = event.detail.items;
             this.setItems(items);
@@ -32,7 +32,7 @@
 
     initialize(){
       window.addEventListener('focusOn', this);
-      window.addEventListener('getItem', this);
+      window.addEventListener('getAllItems', this);
     },
 
     setItems(items) {
@@ -67,9 +67,6 @@
         dateList[idx]['items'].push(element);
         dateList[idx]['sum'] += parseInt(element.price);
       });
-
-
-      console.log(idxs);
 
       idxs.forEach(function (element, idx) {
         var panel = document.createElement('div');

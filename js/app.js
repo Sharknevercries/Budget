@@ -13,8 +13,11 @@ window.addEventListener('DOMContentLoaded', function (event) {
     }));
   });
   $('#page-home').click(function () {
-    $('#hint').html('');
-    $('#main').load('page-home.html');
+    window.dispatchEvent(new CustomEvent('focusOn', {
+      detail: {
+        page: 'page-home'
+      }
+    }));
   });
   $('#page-add').click(function () {
     $('#hint').html('');
@@ -34,6 +37,7 @@ window.addEventListener('DOMContentLoaded', function (event) {
       }));
     })
   });
+
   var itemManager = new ItemManager();
   var pageList = new PageList();
   var pageHome = new PageHome();
