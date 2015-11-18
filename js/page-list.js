@@ -99,13 +99,13 @@
         panelContent.setAttribute('aria-labelledby', 'heading' + idx);
         var table = document.createElement('table');
         table.classList.add('table');
-
+        
         dateList[element]['items'].forEach(function (item) {
           var tr1 = document.createElement('tr');
           var tr2 = document.createElement('tr');
           var td1 = document.createElement('td');
           td1.rowSpan = 2;
-          td1.classList.add('col-xs-4', 'text-center');
+          td1.classList.add('col-xs-2', 'text-center');
           td1.style = 'vertical-align: middle';
           td1.textContent = item['date'];
           var td2 = document.createElement('td');
@@ -113,11 +113,15 @@
           td2.textContent = item['category'];
           var td3 = document.createElement('td');
           td3.rowSpan = 2;
-          td3.classList.add('col-xs-2', 'text-center');
+          td3.classList.add('col-xs-4', 'text-center');
           td3.style = 'vertical-align: middle';
-          td3.textContent = item['price'] + '$';
+          var editButton = document.createElement('button');
+          editButton.classList.add('btn', 'btn-default', 'btn-raised', 'btn-xs');
+          editButton.textContent = item['price'] + '$';
+          editButton.id = item['id'];
+          td3.appendChild(editButton);
           var td4 = document.createElement('td');
-          td4.classList.add('col-xs-6');
+          td4.classList.add('col-xs-7');
           td4.textContent = item['description'];
           tr1.appendChild(td1);
           tr1.appendChild(td2);
@@ -134,6 +138,8 @@
         accordion.appendChild(panel);
 
         $('#main').html(accordion);
+
+        $.material.init();
 
       });
 

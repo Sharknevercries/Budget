@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', function (event) {
   });
   $('#page-add').click(function () {
     $('#hint').html('');
-    $('#main').load('page-add.html');
+    $('#main').load('page-add.html', $.material.init());
     $(document).on('click', '#add-record', function () {
       var price = $('#price').val();
       var category = $('#category option:selected').val();

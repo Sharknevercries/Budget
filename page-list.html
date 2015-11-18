@@ -1,24 +1,52 @@
-﻿<div aria-multiselectable="true" role="tablist" id="accordion">
-    <div class="panel panel-material-grey-500">
-        <div aria-controls="collapse0" aria-expanded="true" href="#collapse0" date-parent="#accordion" data-toggle="collapse" role="tab" class="panel-heading col-xs-12" id="heading0">
-            <h3 class="text-left">
-                <span class="glyphicon glyphicon-chevron-right"></span>0
-                <span class="pull-right">
-                    NaN
-                </span>
-            </h3>
-        </div>
-        <div aria-labelledby="heading0" class="panel-collapse collapse in" id="collapse0">
-            <table class="table">   
-                <tr>
-                    <td rowspan="2" class="col-xs-4 text-center" style="vertical-align: middle">2015-02-03</td>
-                    <td class="col-xs-6">AWEF</td>
-                    <td rowspan="2" class="col-xs-2 text-center" style="vertical-align: middle">5$</td>
-                </tr>
-                <tr>
-                    <td class="col-xs-6" >ADF</td>
-                </tr>
-            </table>
+﻿<html>
+<head>
+    <meta lang="zh" charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
+    <title>Budget</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include roboto.css to use the Roboto web font, material.css to include the theme and ripples.css to style the ripple effect -->
+    <link href="css/roboto.min.css" rel="stylesheet">
+    <link href="css/material-fullpalette.min.css" rel="stylesheet">
+    <link href="css/ripples.min.css" rel="stylesheet">
+    <link href="css/fix.css" rel="stylesheet" />
+</head>
+<body>
+    <div aria-multiselectable="true" role="tablist" id="accordion">
+        <div class="panel panel-material-grey-500">
+            <div aria-controls="collapse0" aria-expanded="true" href="#collapse0" date-parent="#accordion" data-toggle="collapse" role="tab" class="panel-heading col-xs-12" id="heading0">
+                <h3 class="text-left">
+                    <span class="glyphicon glyphicon-chevron-right"></span>0
+                    <span class="pull-right">
+                        NaN
+                    </span>
+                </h3>
+            </div>
+            <div aria-labelledby="heading0" class="panel-collapse collapse in" id="collapse0">
+                <table class="table">
+                    <colgroup>
+                        <col span="1" style="width: 10%"  />
+                        <col span="1" style="width: 50%" />
+                        <col span="1" style="width: 35%" />
+                    </colgroup>
+                    <tr>
+                        <td rowspan="2" class="text-center" style="vertical-align: middle">2015-02-03</td>
+                        <td class="col-xs-6">AWEF</td>
+                        <td rowspan="2" class="text-center" style="vertical-align: middle"><button class="btn btn-default btn-raised btn-xs">5$</button></td>
+                    </tr>
+                    <tr>
+                        <td>651</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+
+    <!-- Javascript -->
+
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/ripples.min.js"></script>
+    <script src="js/material.min.js"></script>
+
+</body>
+</html>

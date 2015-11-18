@@ -5,3 +5,7 @@
 .panel{
     margin-bottom: 0px;
 }
+
+div#nav > div > button {
+    padding: 6px 6px;
+}

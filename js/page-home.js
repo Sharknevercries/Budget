@@ -64,8 +64,6 @@
         categorySum[idx] += element.price;
       });
 
-      console.log(Object.keys(categorySum));
-
       Object.keys(categorySum).forEach(function (element) {
         totalSum += categorySum[element];
         if(maxCategorySum < categorySum[element])
@@ -98,6 +96,8 @@
         h6.appendChild(outerDiv);
         chart.appendChild(h6);
       });
+
+      $.material.init();
 
     }
 
