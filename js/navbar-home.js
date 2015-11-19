@@ -89,6 +89,43 @@
 
     drawNavbarEdit() {
 
+      $('#navbar').load('template/navbar-edit.html', this.setNavbarEditAction.bind(this));
+
+    },
+
+    setNavbarEditAction(){
+
+      $('#navbar-home').click((function () {
+        this.setNavbar('navbar-home');
+        this.setPage('page-list');
+      }).bind(this));
+      $('#item-delete').click((function () {
+        var id = $('#id').val();
+        window.dispatchEvent(new CustomEvent('delItem', {
+          detail: {
+            id: id
+          }
+        }))
+      }).bind(this));
+      $('#item-edit').click((function () {
+        var id = $('#id').val();
+        var price = $('#price').val();
+        var category = $('#category option:selected').val();
+        var date = $('#date').val();
+        var description = $('#description').val();
+        window.dispatchEvent(new CustomEvent('editItem', {
+          detail: {
+            "id": id,
+            "price": price,
+            "category": category,
+            "date": date,
+            "description": description
+          }
+        }));
+        this.setNavbar('navbar-home');
+        this.setPage('page-list');
+      }).bind(this));
+
     },
 
     //

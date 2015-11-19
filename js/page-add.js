@@ -15,8 +15,6 @@
             this.draw();
           }
           break;
-        case 'setHint':
-
       }
 
     },

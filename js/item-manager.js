@@ -24,9 +24,16 @@
                 });
               });
           break;
+        case 'getItemById':
+          if (event.detail.target == 'item-manager') {
+            this.getItemById(event.detail.id, event.detail.source);
+          }
+          break;
         case 'delItem':
+          console.log(event.detail);
           break;
         case 'editItem':
+          console.log(event.detail);
           break;
         case 'getAllItems':
           if (event.detail.target == 'item-manager') {
@@ -47,6 +54,7 @@
       window.addEventListener('addItem', this);
       window.addEventListener('delItem', this);
       window.addEventListener('editItem', this);
+      window.addEventListener('getItemById', this);
       window.addEventListener('getAllItems', this);
       window.addEventListener('getItemsByYearMonth', this);
 
@@ -123,6 +131,24 @@
             }
           }));
         });
+
+    },
+
+    getItemById(id, source){
+
+      var db = this._db;
+      db.items
+      .where('id')
+      .equals(id)
+      .toArray()
+      .then(function (item) {
+        window.dispatchEvent(new CustomEvent('getItemById', {
+          detail: {
+            target: source,
+            item: item[0]
+          }
+        }))
+      })
 
     },
 

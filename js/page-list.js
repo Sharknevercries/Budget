@@ -48,6 +48,7 @@
 
     draw() {
       
+      var self = this;
       var accordion = document.createElement('div');
       accordion.id = 'accordion';
       accordion.setAttribute('role', 'tablist');
@@ -121,6 +122,8 @@
           editButton.classList.add('btn', 'btn-default', 'btn-raised', 'btn-xs');
           editButton.textContent = item['price'] + '$';
           editButton.id = item['id'];
+          editButton.onclick = self.clickEdit;
+          //editButton.click = this();
           td3.appendChild(editButton);
           var td4 = document.createElement('td');
           td4.classList.add('col-xs-6');
@@ -144,6 +147,23 @@
         $.material.init();
 
       });
+
+    },
+
+    clickEdit(event) {
+
+      var btn = event.target;
+      window.dispatchEvent(new CustomEvent('setNavbar', {
+        detail: {
+          page: 'navbar-edit'
+        }
+      }));
+      window.dispatchEvent(new CustomEvent('setPage', {
+        detail: {
+          page: 'page-edit',
+          id: parseInt(btn.id)
+        }
+      }));
 
     }
 
