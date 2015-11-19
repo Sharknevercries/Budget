@@ -1,11 +1,11 @@
-﻿.navbar{
-    margin-bottom: 0px;
+﻿body{
+    padding-top: 50px;
 }
 
 .panel{
     margin-bottom: 0px;
 }
 
-div#nav > div > button {
+div#navbar > div > button {
     padding: 6px 6px;
 }

@@ -8,7 +8,7 @@
 
     handleEvent(event) {
       switch (event.type) {
-        case 'focusOn':
+        case 'setPage':
           if (event.detail.page == "page-list") {
             window.dispatchEvent(new CustomEvent('getAllItems', {
               detail:
@@ -31,7 +31,7 @@
     },
 
     initialize(){
-      window.addEventListener('focusOn', this);
+      window.addEventListener('setPage', this);
       window.addEventListener('getAllItems', this);
     },
 
@@ -39,9 +39,11 @@
       this._items = items;
     },
 
-    resetWrapper(){
+    resetWrapper() {
+
       $('#hint').html('');
       $('#main').html('');
+
     },
 
     draw() {
@@ -105,7 +107,7 @@
           var tr2 = document.createElement('tr');
           var td1 = document.createElement('td');
           td1.rowSpan = 2;
-          td1.classList.add('col-xs-2', 'text-center');
+          td1.classList.add('col-xs-1', 'text-center');
           td1.style = 'vertical-align: middle';
           td1.textContent = item['date'];
           var td2 = document.createElement('td');
@@ -113,7 +115,7 @@
           td2.textContent = item['category'];
           var td3 = document.createElement('td');
           td3.rowSpan = 2;
-          td3.classList.add('col-xs-4', 'text-center');
+          td3.classList.add('col-xs-5', 'text-center');
           td3.style = 'vertical-align: middle';
           var editButton = document.createElement('button');
           editButton.classList.add('btn', 'btn-default', 'btn-raised', 'btn-xs');
@@ -121,7 +123,7 @@
           editButton.id = item['id'];
           td3.appendChild(editButton);
           var td4 = document.createElement('td');
-          td4.classList.add('col-xs-7');
+          td4.classList.add('col-xs-6');
           td4.textContent = item['description'];
           tr1.appendChild(td1);
           tr1.appendChild(td2);

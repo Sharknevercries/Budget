@@ -9,7 +9,7 @@
 
     handleEvent(event) {
       switch (event.type) {
-        case 'focusOn':
+        case 'setPage':
           if (event.detail.page == 'page-home') {
             var date = new Date();
             // Be care about getMonth return 0 ~ 11
@@ -29,15 +29,17 @@
             var items = event.detail.items;
             this.setItems(items);
             this.resetWrapper();
-            $('#main').load('page-home.html', this.draw.bind(this));
+            $('#main').load('template/page-home.html', this.draw.bind(this));
           }
           break;
       }
     },
 
     initialize() {
-      window.addEventListener('focusOn', this);
+
+      window.addEventListener('setPage', this);
       window.addEventListener('getItemsByYearMonth', this);
+
     },
 
     setItems(items){
@@ -45,8 +47,9 @@
     },
 
     resetWrapper() {
-      $('#hint').html('');
+
       $('#main').html('');
+
     },
 
     draw() {

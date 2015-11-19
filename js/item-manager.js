@@ -12,14 +12,12 @@
         case 'addItem':
           this.addItem(event.detail)
               .then(function () {
-                $('#page-home').click();
-                $('#hint').load('hint.html', function () {
+                $('#hint').load('template/hint.html', function () {
                   $('#hint-bg').addClass('alert-success');
                   $('#hint-text').text("Succesfully Add.");
                 });
               })
               .catch(function (reason) {
-                $('#page-home').click();
                 $('#hint').load('hint.html', function () {
                   $('#hint-bg').addClass('alert-danger');
                   $('#hint-text').text(reason);
@@ -145,6 +143,10 @@
         case 2: return "Others";
         default: return "undefined";
       }
+
+    },
+
+    draw() {
 
     }
 

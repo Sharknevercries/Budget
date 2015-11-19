@@ -5,45 +5,21 @@ $(document).ready(function () {
 });
 
 window.addEventListener('DOMContentLoaded', function (event) {
-  $('#page-list').click(function () {    
-    window.dispatchEvent(new CustomEvent('focusOn', {
-      detail: {
-        page: 'page-list'
-      }
-    }));
-  });
-  $('#page-home').click(function () {
-    window.dispatchEvent(new CustomEvent('focusOn', {
-      detail: {
-        page: 'page-home'
-      }
-    }));
-  });
-  $('#page-add').click(function () {
-    $('#hint').html('');
-    $('#main').load('page-add.html', $.material.init());
-    $(document).on('click', '#add-record', function () {
-      var price = $('#price').val();
-      var category = $('#category option:selected').val();
-      var date = $('#date').val();
-      var description = $('#description').val();
-      window.dispatchEvent(new CustomEvent('addItem', {
-        detail: {
-          "price": price,
-          "category": category,
-          "date": date,
-          "description": description
-        }
-      }));
-    })
-  });
-
   var itemManager = new ItemManager();
   var pageList = new PageList();
   var pageHome = new PageHome();
+  var pageAdd = new PageAdd();
+  var pageController = new PageController();
   itemManager.initialize();
   pageList.initialize();
   pageHome.initialize();
+  pageAdd.initialize();
+  pageController.initialize();
 
-  $('#page-home').click();
+  window.dispatchEvent(new CustomEvent('setNavbar', {
+    detail: {
+      page: 'navbar-home'
+    }
+  }));
+
 })
