@@ -143,10 +143,10 @@
         accordion.appendChild(panel);
 
         $('#main').html(accordion);
-
-        $.material.init();
-
+        
       });
+
+      $.material.init();
 
     },
 
@@ -161,7 +161,7 @@
       window.dispatchEvent(new CustomEvent('setPage', {
         detail: {
           page: 'page-edit',
-          id: parseInt(btn.id)
+          id: btn.id
         }
       }));
 

@@ -64,6 +64,12 @@
       $('#category select').val(item.category);
       $('#date').val(item.date);
       $('#description').val(item.description);
+      $('#price').change(function () {
+        var price = this.value;
+        if (!($.isNumeric(price) && price == Math.floor(price) && price >= 0)) {
+          this.value = 0;
+        }
+      })
       $.material.init();
 
     }

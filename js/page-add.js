@@ -34,7 +34,19 @@
 
     draw() {
 
-      $('#main').load('template/page-add.html', $.material.init());      
+      $('#main').load('template/page-add.html', this.setAction.bind(this));
+
+    },
+
+    setAction() {
+
+      $('#price').change(function () {
+        var price = this.value;
+        if (!($.isNumeric(price) && price == Math.floor(price) && price >= 0)) {
+          this.value = 0;
+        }
+      })
+      $.material.init();
 
     }
 

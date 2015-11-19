@@ -106,6 +106,8 @@
             id: id
           }
         }))
+        this.setNavbar('navbar-home');
+        this.setPage('page-home');
       }).bind(this));
       $('#item-edit').click((function () {
         var id = $('#id').val();
@@ -123,7 +125,7 @@
           }
         }));
         this.setNavbar('navbar-home');
-        this.setPage('page-list');
+        this.setPage('page-home');
       }).bind(this));
 
     },

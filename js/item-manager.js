@@ -10,30 +10,18 @@
 
       switch (event.type) {
         case 'addItem':
-          this.addItem(event.detail)
-              .then(function () {
-                $('#hint').load('template/hint.html', function () {
-                  $('#hint-bg').addClass('alert-success');
-                  $('#hint-text').text("Succesfully Add.");
-                });
-              })
-              .catch(function (reason) {
-                $('#hint').load('hint.html', function () {
-                  $('#hint-bg').addClass('alert-danger');
-                  $('#hint-text').text(reason);
-                });
-              });
+          this.addItem(event.detail);              
+          break;
+        case 'delItem':
+          this.delItem(event.detail.id);
+          break;
+        case 'editItem':
+          this.editItem(event.detail);
           break;
         case 'getItemById':
           if (event.detail.target == 'item-manager') {
             this.getItemById(event.detail.id, event.detail.source);
           }
-          break;
-        case 'delItem':
-          console.log(event.detail);
-          break;
-        case 'editItem':
-          console.log(event.detail);
           break;
         case 'getAllItems':
           if (event.detail.target == 'item-manager') {
@@ -65,31 +53,69 @@
 
     },
 
-    addItem(data) {
+    setHint(msg, style){
 
-      return new Promise((function (resolve, reject) {
-
-        var db = this._db;
-        var price = parseInt(data.price);
-        var category = parseInt(data.category);
-        var date = data.date;
-        var description = data.description;
-
-        if (!Number.isInteger(price) || price < 0)
-          reject("Price is negative or is not integer.");
-
-        db.items.add({ category: category, date: date, price: price, description: description })
-          .then(resolve);
-
-      }).bind(this));
+      $('#hint').load('template/hint.html', function () {
+        $('#hint-bg').addClass('alert-' + style);
+        $('#hint-text').text(msg);
+      });
 
     },
 
-    delItem(data) {
+    addItem(data) {
+
+      var db = this._db;
+      var price = parseInt(data.price);
+      var category = parseInt(data.category);
+      var date = data.date;
+      var description = data.description;
+
+      db.items.add({ category: category, date: date, price: price, description: description })
+        .then((function () {
+          this.setHint('Successfully add a record', 'success');
+        }).bind(this))
+        .catch((function (reason) {
+          this.setHint(reason, 'danger');
+        }).bind(this));
+
+    },
+
+    delItem(id) {
+
+      var db = this._db;
+      id = parseInt(id);
+      console.log(id);
+      db.items
+        .where('id')
+        .equals(id)
+        .delete()
+        .then((function () {
+          this.setHint('Successfully delete the record.', 'success');
+        }).bind(this))
+        .catch((function (reason) {
+          this.setHint(reason, 'danger');
+        }).bind(this));
 
     },
 
     editItem(data) {
+
+      var db = this._db;
+      var id = parseInt(data.id);
+      var price = parseInt(data.price);
+      var category = parseInt(data.category);
+      var date = data.date;
+      var description = data.description;
+      db.items
+        .where('id')
+        .equals(id)
+        .modify({ price: price, category: category, date: date, description: description })
+        .then((function () {
+          this.setHint('Successfully edit the record.', 'success');
+        }).bind(this))
+        .catch((function (reason) {
+          this.setHint(reason, 'danger');
+        }).bind(this));
 
     },
 
@@ -100,6 +126,9 @@
         .orderBy('date')
         .reverse()
         .toArray()
+        .catch((function (reason) {
+          this.setHint(reason, 'danger');
+        }).bind(this))
         .then(this.parseItems.bind(this))
         .then(function (items) {
           window.dispatchEvent(new CustomEvent('getAllItems', {
@@ -122,6 +151,9 @@
         .where('date')
         .between(year_month + '-01', year_month + '-31', true, true)
         .toArray()
+        .catch((function (reason) {
+          this.setHint(reason, 'danger');
+        }).bind(this))
         .then(this.parseItems.bind(this))
         .then(function (items) {
           window.dispatchEvent(new CustomEvent('getItemsByYearMonth', {
@@ -137,10 +169,14 @@
     getItemById(id, source){
 
       var db = this._db;
+      id = parseInt(id);
       db.items
       .where('id')
       .equals(id)
       .toArray()
+      .catch((function (reason) {
+        this.setHint(reason, 'danger');
+      }).bind(this))
       .then(function (item) {
         window.dispatchEvent(new CustomEvent('getItemById', {
           detail: {
@@ -169,10 +205,6 @@
         case 2: return "Others";
         default: return "undefined";
       }
-
-    },
-
-    draw() {
 
     }
 
