@@ -19,7 +19,7 @@
               {
                 year_month: year_month,
                 source: 'page-home',
-                target: 'item-manager'
+                target: 'database'
               }
             }));
           }

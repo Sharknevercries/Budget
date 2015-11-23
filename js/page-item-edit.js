@@ -1,28 +1,28 @@
 ﻿(function (exports) {
 
-  var PageEdit = function () {
+  var PageItemEdit = function () {
     this._item = null;
   }
 
-  PageEdit.prototype = {
+  PageItemEdit.prototype = {
 
     handleEvent(event) {
 
       switch (event.type) {
         case 'setPage':
-          if (event.detail.page == 'page-edit') {
+          if (event.detail.page == 'page-item-edit') {
             var id = event.detail.id;
             window.dispatchEvent(new CustomEvent('getItemById', {
               detail: {
-                source: 'page-edit',
-                target: 'item-manager',
+                source: 'page-item-edit',
+                target: 'database',
                 id: id
               }
             }));
           }
           break;
         case 'getItemById':
-          if (event.detail.target == 'page-edit') {
+          if (event.detail.target == 'page-item-edit') {
             this.resetWrapper();
             this.setItem(event.detail.item);
             this.draw();
@@ -52,7 +52,7 @@
 
     draw() {
 
-      $('#main').load('template/page-edit.html', this.setAction.bind(this));
+      $('#main').load('template/page-item-edit.html', this.setAction.bind(this));
 
     },
 
@@ -61,21 +61,15 @@
       var item = this._item;
       $('#id').val(item.id);
       $('#price').val(item.price);
-      $('#category select').val(item.category);
+      $('#category').val(item.category);
       $('#date').val(item.date);
       $('#description').val(item.description);
-      $('#price').change(function () {
-        var price = this.value;
-        if (!($.isNumeric(price) && price == Math.floor(price) && price >= 0)) {
-          this.value = 0;
-        }
-      })
       $.material.init();
 
     }
 
   }
 
-  exports.PageEdit = PageEdit;
+  exports.PageItemEdit = PageItemEdit;
 
 })(window);

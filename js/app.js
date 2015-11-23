@@ -5,17 +5,9 @@ $(document).ready(function () {
 });
 
 window.addEventListener('DOMContentLoaded', function (event) {
-  var itemManager = new ItemManager();
-  var pageList = new PageList();
-  var pageHome = new PageHome();
-  var pageAdd = new PageAdd();
-  var pageEdit = new PageEdit();
+  var database = new Database(); 
   var pageController = new PageController();
-  itemManager.initialize();
-  pageList.initialize();
-  pageHome.initialize();
-  pageAdd.initialize();
-  pageEdit.initialize();
+  database.initialize();
   pageController.initialize();
 
   window.dispatchEvent(new CustomEvent('setNavbar', {

@@ -1,16 +1,15 @@
 ﻿(function (exports) {
 
-  var PageAdd = function () {
-
+  var PageItemAdd = function () {
   }
 
-  PageAdd.prototype = {
+  PageItemAdd.prototype = {
 
     handleEvent(event) {
 
       switch (event.type) {
         case 'setPage':
-          if (event.detail.page == 'page-add') {
+          if (event.detail.page == 'page-item-add') {
             this.resetWrapper();
             this.draw();
           }
@@ -34,24 +33,18 @@
 
     draw() {
 
-      $('#main').load('template/page-add.html', this.setAction.bind(this));
+      $('#main').load('template/page-item-add.html', this.setAction.bind(this));
 
     },
 
     setAction() {
 
-      $('#price').change(function () {
-        var price = this.value;
-        if (!($.isNumeric(price) && price == Math.floor(price) && price >= 0)) {
-          this.value = 0;
-        }
-      })
       $.material.init();
 
     }
 
   }
 
-  exports.PageAdd = PageAdd;
+  exports.PageItemAdd = PageItemAdd;
 
 })(window);

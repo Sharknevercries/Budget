@@ -1,26 +1,26 @@
 ﻿(function (exports) {
 
-  var PageList = function(){
+  var PageItemList = function(){
     this._items = null;
   }
 
-  PageList.prototype = {
+  PageItemList.prototype = {
 
     handleEvent(event) {
       switch (event.type) {
         case 'setPage':
-          if (event.detail.page == "page-list") {
+          if (event.detail.page == "page-item-list") {
             window.dispatchEvent(new CustomEvent('getAllItems', {
               detail:
               {
-                source: 'page-list',
-                target: 'item-manager'
+                source: 'page-item-list',
+                target: 'database'
               }
             }));
           }
           break;
         case 'getAllItems':
-          if (event.detail.target == 'page-list') {
+          if (event.detail.target == 'page-item-list') {
             var items = event.detail.items;
             this.setItems(items);
             this.resetWrapper();
@@ -73,7 +73,7 @@
 
       idxs.forEach(function (element, idx) {
         var panel = document.createElement('div');
-        panel.classList.add('panel', 'panel-material-grey-500');
+        panel.classList.add('panel', 'panel-material-grey');
 
         var panelHeading = document.createElement('div');
         panelHeading.id = 'heading' + idx;
@@ -122,8 +122,7 @@
           editButton.classList.add('btn', 'btn-default', 'btn-raised', 'btn-xs');
           editButton.textContent = item['price'] + '$';
           editButton.id = item['id'];
-          editButton.onclick = self.clickEdit;
-          //editButton.click = this();
+          editButton.onclick = self.btnClickEdit;
           td3.appendChild(editButton);
           var td4 = document.createElement('td');
           td4.classList.add('col-xs-6');
@@ -150,17 +149,17 @@
 
     },
 
-    clickEdit(event) {
+    btnClickEdit(event) {
 
       var btn = event.target;
       window.dispatchEvent(new CustomEvent('setNavbar', {
         detail: {
-          page: 'navbar-edit'
+          page: 'navbar-item-edit'
         }
       }));
       window.dispatchEvent(new CustomEvent('setPage', {
         detail: {
-          page: 'page-edit',
+          page: 'page-item-edit',
           id: btn.id
         }
       }));
@@ -169,6 +168,6 @@
 
   }
 
-  exports.PageList = PageList;
+  exports.PageItemList = PageItemList;
 
 })(window);

@@ -6,6 +6,8 @@
     margin-bottom: 0px;
 }
 
-div#navbar > div > button {
-    padding: 6px 6px;
+div#navbar > div{
+    padding-left: 3px;
+    padding-right: 3px;
 }
+
