@@ -100,6 +100,7 @@
         panelContent.id = 'collapse' + idx;
         panelContent.classList.add('panel-collapse', 'collapse', 'in');
         panelContent.setAttribute('aria-labelledby', 'heading' + idx);
+        panelContent.setAttribute('role', 'tabpanel');
         var table = document.createElement('table');
         table.classList.add('table');
         

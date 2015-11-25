@@ -12,7 +12,6 @@
         case 'setPage':
           if (event.detail.page == 'page-home') {
             var date = new Date();
-            // Be care about getMonth return 0 ~ 11
             var year_month = date.getFullYear() + '-' + (date.getMonth() + 1);
             window.dispatchEvent(new CustomEvent('getItemsByYearMonth', {
               detail:
@@ -29,7 +28,7 @@
             var items = event.detail.items;
             this.setItems(items);
             this.resetWrapper();
-            $('#main').load('template/page-home.html', this.draw.bind(this));
+            this.draw();
           }
           break;
       }
@@ -53,6 +52,12 @@
     },
 
     draw() {
+
+      $('#main').load('template/page-home.html', this.drawData.bind(this));
+
+    },
+
+    drawData() {
       
       var items = this._items;
       var totalSum = 0;

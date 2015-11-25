@@ -3,7 +3,7 @@
   var Database = function () {
 
     this._db = null;
-    this._categoriesList = null;
+    this._categories = null;
     
   }
 
@@ -86,7 +86,6 @@
       window.addEventListener('addCategory', this);
       window.addEventListener('editCategory', this);
       window.addEventListener('delCategory', this);
-      window.addEventListener('getAllCategories', this);
       window.addEventListener('getCategoryById', this);
 
       this._db = new Dexie("Budget");
@@ -101,7 +100,13 @@
       });
       db.open();
 
-      this.updateCategoriesList();
+      db.categories
+        .put({ id: 0, color: "grey", description: "Others" })
+      .catch(function (reason) {
+        alert(reason);
+      });
+      
+      this.updateCategories();
 
     },
 
@@ -185,6 +190,7 @@
         .toArray()
         .then(this.parseItems.bind(this))
         .then(function (items) {
+          console.log(items);
           window.dispatchEvent(new CustomEvent('getAllItems', {
             detail: {
               target: source,
@@ -256,7 +262,11 @@
     
     parseItems(items) {
 
-      var hashTable = this._categoriesList;
+      var hashTable = {};
+      var categories = this._categories;
+      categories.forEach(function (element) {
+        hashTable[element['id']] = element['description'];
+      })
       items.forEach(function (element) {
         var idx = element['category'];
         if (!hashTable[idx])
@@ -287,7 +297,7 @@
         .catch((function (reason) {
           this.setHint(reason, 'danger');
         }).bind(this))
-        .then(this.updateCategoriesList.bind(this));
+        .then(this.updateCategories.bind(this));
 
     },
 
@@ -296,7 +306,7 @@
       var db = this._db;
       var id = parseInt(data.id);
       var color = data.color;
-      var description = parseInt(data.description);
+      var description = data.description;
       db.categories
         .where('id')
         .equals(id)
@@ -307,7 +317,7 @@
         .catch((function (reason) {
           this.setHint(reason, 'danger');
         }).bind(this))
-        .then(this.updateCategoriesList.bind(this));
+        .then(this.updateCategories.bind(this));
 
     },
 
@@ -325,33 +335,7 @@
         .catch((function (reason) {
           this.setHint(reason, 'danger');
         }).bind(this))
-        .then(this.updateCategoriesList.bind(this));
-
-    },
-
-    getAllCategories(data) {
-
-      var db = this._db;
-      db.categories
-        .toArray()
-        .then(function (categories) {
-          console.log(categories);
-          window.dispatchEvent(new CustomEvent('getAllCategories', {
-            detail: {
-              target: data.source,
-              categories: categories
-            }
-          }));
-        })
-        .catch((function (reason) {
-          // Typically, there is no item in category.
-          window.dispatchEvent(new CustomEvent('getAllCategories', {
-            detail: {
-              target: data.source,
-              categories: null
-            }
-          }));
-        }).bind(this))
+        .then(this.updateCategories.bind(this));
 
     },
 
@@ -364,7 +348,6 @@
         .equals(id)
         .toArray()
         .then(function (categories) {
-          console.log(categories);
           window.dispatchEvent(new CustomEvent('getCategoryById', {
             detail: {
               target: source,
@@ -378,17 +361,20 @@
 
     },
 
-    updateCategoriesList() {
+    updateCategories() {
 
       var db = this._db;
-      db.categories
+      db.categories    
+        .orderBy('description')
+        .reverse()    
         .toArray()
         .then((function (categories) {
-          var list = {};
-          categories.forEach(function (element) {
-            list[element['id']] = element['description'];
-          })
-          this._categoriesList = list;
+          this._categories = categories;
+          window.dispatchEvent(new CustomEvent('updateCategories', {
+            detail: {
+              categories: categories
+            }
+          }));
         }).bind(this));
 
     }
