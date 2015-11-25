@@ -23,8 +23,8 @@
           break;
         case 'getCategoryById':
           if (event.detail.target == 'page-category-edit') {
-            this.resetWrapper();
             this.setCategory(event.detail.category);
+            this.resetWrapper();
             this.draw();
           }
           break;

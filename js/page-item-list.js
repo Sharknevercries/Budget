@@ -48,6 +48,9 @@
 
     draw() {
       
+      //TODO
+      //Use jquery to construct DOM.
+
       var self = this;
       var accordion = document.createElement('div');
       accordion.id = 'accordion';

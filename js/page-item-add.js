@@ -13,12 +13,20 @@
       switch (event.type) {
         case 'setPage':
           if (event.detail.page == 'page-item-add') {
+            window.dispatchEvent(new CustomEvent('getAllCategories', {
+              detail: {
+                source: 'page-item-add',
+                target: 'database',
+              }
+            }));
+          }
+          break;
+        case 'getAllCategories':
+          if (event.detail.target == 'page-item-add') {
+            this.setCategories(event.detail.categories);
             this.resetWrapper();
             this.draw();
           }
-          break;
-        case 'updateCategories':
-          this.setCategories(event.detail.categories);
           break;
       }
 
@@ -27,7 +35,7 @@
     initialize() {
 
       window.addEventListener('setPage', this);
-      window.addEventListener('updateCategories', this);
+      window.addEventListener('getAllCategories', this);
 
     },
 
@@ -63,7 +71,7 @@
           value: element.id
         }));
       })
-      $('#category').val($('#category option:first').val());
+      $('#category').val(0);  // Default is Others.
       $('#date').val(today);
 
       $.material.init();

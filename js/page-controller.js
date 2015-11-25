@@ -286,7 +286,7 @@
       }).bind(this));
       $('#edit').click((function () {
         var id = $('#id').val();
-        var color = $('#category option:selected').val();
+        var color = $('#color option:selected').val();
         var description = $('#description').val();
         if (description == '') {
           alert("Description must not be empty!");

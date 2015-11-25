@@ -12,13 +12,19 @@
       switch (event.type) {
         case 'setPage':
           if (event.detail.page == 'page-category-home') {
-            this.resetWrapper();
-            this.draw();
+            window.dispatchEvent(new CustomEvent('getAllCategories', {
+              detail: {
+                source: 'page-category-home',
+                target: 'database'
+              }
+            }))
           }
           break;
-        case 'updateCategories':
+        case 'getAllCategories':
           if (event.detail.target == 'page-category-home') {
             this.setCategories(event.detail.categories);
+            this.resetWrapper();
+            this.draw();
           }
           break;
       }
@@ -27,7 +33,7 @@
     initialize() {
 
       window.addEventListener('setPage', this);
-      window.addEventListener('updateCategories', this);
+      window.addEventListener('getAllCategories', this);
 
     },
 
@@ -54,6 +60,7 @@
       var categories = this._categories;
       var self = this;
       
+      console.log(categories);
       categories.forEach(function (element) {
         var li = $('<li>', { "class": "list-group-item" });
         var btn = $('<button>', {

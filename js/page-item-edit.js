@@ -3,6 +3,7 @@
   var PageItemEdit = function () {
     this._item = null;
     this._categories = null;
+    this._eventCounter = 0;
   }
 
   PageItemEdit.prototype = {
@@ -13,6 +14,7 @@
         case 'setPage':
           if (event.detail.page == 'page-item-edit') {
             var id = event.detail.id;
+            this._eventCounter = 0;
             window.dispatchEvent(new CustomEvent('getItemById', {
               detail: {
                 source: 'page-item-edit',
@@ -20,17 +22,25 @@
                 id: id
               }
             }));
+            window.dispatchEvent(new CustomEvent('getAllCategories', {
+              detail: {
+                source: 'page-item-edit',
+                target: 'database'
+              }
+            }));
           }
           break;
         case 'getItemById':
           if (event.detail.target == 'page-item-edit') {
             this.setItem(event.detail.item);
-            this.resetWrapper();
-            this.draw();
+            this.dataArrived();
           }
           break;
-        case 'updateCategories':
-          this.setCategories(event.detail.categories);
+        case 'getAllCategories':
+          if (event.detail.target == 'page-item-edit') {
+            this.setCategories(event.detail.categories);
+            this.dataArrived();
+          }
           break;
       }
 
@@ -39,7 +49,7 @@
     initialize() {
 
       window.addEventListener('setPage', this);
-      window.addEventListener('updateCategories', this);
+      window.addEventListener('getAllCategories', this);
       window.addEventListener('getItemById', this);
 
     },
@@ -59,6 +69,16 @@
       this._categories = categories;
     },
 
+    dataArrived(){
+
+      this._eventCounter++;
+      if (this._eventCounter == 2) {
+        this.resetWrapper();
+        this.draw();
+      }
+
+    },
+
     draw() {
 
       $('#main').load('template/page-item-edit.html', this.setAction.bind(this));
@@ -75,7 +95,7 @@
           text: element.description,
           value: element.id
         }));
-        if (item.categories == element.id) {
+        if (item.category == element.id) {
           foundCategoryValue = true;
           $('#category').val(item.category);
         }

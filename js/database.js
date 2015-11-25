@@ -86,6 +86,7 @@
       window.addEventListener('addCategory', this);
       window.addEventListener('editCategory', this);
       window.addEventListener('delCategory', this);
+      window.addEventListener('getAllCategories', this);
       window.addEventListener('getCategoryById', this);
 
       this._db = new Dexie("Budget");
@@ -106,7 +107,7 @@
         alert(reason);
       });
       
-      this.updateCategories();
+      this.updateCategoriesList();
 
     },
 
@@ -190,7 +191,6 @@
         .toArray()
         .then(this.parseItems.bind(this))
         .then(function (items) {
-          console.log(items);
           window.dispatchEvent(new CustomEvent('getAllItems', {
             detail: {
               target: source,
@@ -262,11 +262,8 @@
     
     parseItems(items) {
 
-      var hashTable = {};
-      var categories = this._categories;
-      categories.forEach(function (element) {
-        hashTable[element['id']] = element['description'];
-      })
+      var hashTable = this._categoriesList;
+      console.log(items);
       items.forEach(function (element) {
         var idx = element['category'];
         if (!hashTable[idx])
@@ -274,6 +271,7 @@
         else
           element['category'] = hashTable[idx];
       });
+      console.log(items);
       return items;
 
     },
@@ -297,7 +295,7 @@
         .catch((function (reason) {
           this.setHint(reason, 'danger');
         }).bind(this))
-        .then(this.updateCategories.bind(this));
+        .then(this.updateCategoriesList.bind(this));
 
     },
 
@@ -307,6 +305,7 @@
       var id = parseInt(data.id);
       var color = data.color;
       var description = data.description;
+      console.log(data);
       db.categories
         .where('id')
         .equals(id)
@@ -317,7 +316,7 @@
         .catch((function (reason) {
           this.setHint(reason, 'danger');
         }).bind(this))
-        .then(this.updateCategories.bind(this));
+        .then(this.updateCategoriesList.bind(this));
 
     },
 
@@ -335,7 +334,34 @@
         .catch((function (reason) {
           this.setHint(reason, 'danger');
         }).bind(this))
-        .then(this.updateCategories.bind(this));
+        .then(this.updateCategoriesList.bind(this));
+
+    },
+
+    getAllCategories(data) {
+
+      var db = this._db;
+      db.categories
+        .orderBy('description')
+        .reverse()
+        .toArray()
+        .then(function (categories) {
+          window.dispatchEvent(new CustomEvent('getAllCategories', {
+            detail: {
+              target: data.source,
+              categories: categories
+            }
+          }));
+        })
+        .catch((function (reason) {
+          // Typically, there is no item in category.
+          window.dispatchEvent(new CustomEvent('getAllCategories', {
+            detail: {
+              target: data.source,
+              categories: null
+            }
+          }));
+        }).bind(this))
 
     },
 
@@ -361,20 +387,17 @@
 
     },
 
-    updateCategories() {
+    updateCategoriesList() {
 
       var db = this._db;
-      db.categories    
-        .orderBy('description')
-        .reverse()    
+      db.categories        
         .toArray()
         .then((function (categories) {
-          this._categories = categories;
-          window.dispatchEvent(new CustomEvent('updateCategories', {
-            detail: {
-              categories: categories
-            }
-          }));
+          var list = {};
+          categories.forEach(function (element) {
+            list[element['id']] = element['description'];
+          })
+          this._categoriesList = list;
         }).bind(this));
 
     }

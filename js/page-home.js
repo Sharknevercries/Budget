@@ -58,6 +58,8 @@
     },
 
     drawData() {
+
+      // use jquery  to construct DOM
       
       var items = this._items;
       var totalSum = 0;

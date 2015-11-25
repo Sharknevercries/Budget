@@ -42,23 +42,19 @@
 
     setAction() {
 
-      $('#category-config').click(this.categoryConfig.bind(this));
+      $('#category-config').click((function () {
+        window.dispatchEvent(new CustomEvent('setNavbar', {
+          detail: {
+            page: 'navbar-category-home'
+          }
+        }));
+        window.dispatchEvent(new CustomEvent('setPage', {
+          detail: {
+            page: 'page-category-home'
+          }
+        }));
+      }).bind(this));
       $.material.init();
-
-    },
-
-    categoryConfig() {
-
-      window.dispatchEvent(new CustomEvent('setNavbar', {
-        detail: {
-          page: 'navbar-category-home'
-        }
-      }));
-      window.dispatchEvent(new CustomEvent('setPage', {
-        detail: {
-          page: 'page-category-home'
-        }
-      }));
 
     }
 
