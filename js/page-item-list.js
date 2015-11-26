@@ -2,6 +2,7 @@
 
   var PageItemList = function(){
     this._items = null;
+    this._eventCounter = 0;
   }
 
   PageItemList.prototype = {
@@ -21,8 +22,7 @@
           break;
         case 'getAllItems':
           if (event.detail.target == 'page-item-list') {
-            var items = event.detail.items;
-            this.setItems(items);
+            this.setItems(event.detail.items);
             this.resetWrapper();
             this.draw();
           }
@@ -48,16 +48,14 @@
 
     draw() {
       
-      //TODO
-      //Use jquery to construct DOM.
+      $('#main').load('template/page-item-list.html', this.drawData.bind(this));
 
-      var self = this;
-      var accordion = document.createElement('div');
-      accordion.id = 'accordion';
-      accordion.setAttribute('role', 'tablist');
-      accordion.setAttribute('aria-multiselectable', true);
-      
+    },
+
+    drawData() {
+
       var items = this._items;
+      var self = this;
 
       var idxs = [];
       var dateList = {};
@@ -74,86 +72,97 @@
         dateList[idx]['sum'] += parseInt(element.price);
       });
 
+      console.log(dateList);
+
       idxs.forEach(function (element, idx) {
-        var panel = document.createElement('div');
-        panel.classList.add('panel', 'panel-material-grey');
 
-        var panelHeading = document.createElement('div');
-        panelHeading.id = 'heading' + idx;
-        panelHeading.classList.add('panel-heading', 'col-xs-12');
-        panelHeading.setAttribute('role', 'tab');
-        panelHeading.setAttribute('data-toggle', 'collapse');
-        panelHeading.setAttribute('date-parent', '#accordion');
-        panelHeading.setAttribute('href', '#collapse' + idx);
-        panelHeading.setAttribute('aria-expanded', true);
-        panelHeading.setAttribute('aria-controls', 'collapse' + idx);
-        var h3 = document.createElement('h3');
-        h3.classList.add('text-left');
-        var spanicon = document.createElement('span');
-        spanicon.classList.add('glyphicon', 'glyphicon-chevron-right');
-        var sumPrice = document.createElement('span');
-        sumPrice.classList.add('pull-right');
-        sumPrice.appendChild(document.createTextNode(dateList[element]['sum'] + '$'));
-        h3.appendChild(spanicon);
-        h3.appendChild(document.createTextNode(element));
-        h3.appendChild(sumPrice);
-        panelHeading.appendChild(h3);
-        
-        var panelContent = document.createElement('div');
-        panelContent.id = 'collapse' + idx;
-        panelContent.classList.add('panel-collapse', 'collapse', 'in');
-        panelContent.setAttribute('aria-labelledby', 'heading' + idx);
-        panelContent.setAttribute('role', 'tabpanel');
-        var table = document.createElement('table');
-        table.classList.add('table');
-        
-        dateList[element]['items'].forEach(function (item) {
-          var tr1 = document.createElement('tr');
-          var tr2 = document.createElement('tr');
-          var td1 = document.createElement('td');
-          td1.rowSpan = 2;
-          td1.classList.add('col-xs-1', 'text-center');
-          td1.style = 'vertical-align: middle';
-          td1.textContent = item['date'];
-          var td2 = document.createElement('td');
-          td2.classList.add('col-xs-6');
-          td2.textContent = item['category'];
-          var td3 = document.createElement('td');
-          td3.rowSpan = 2;
-          td3.classList.add('col-xs-5', 'text-center');
-          td3.style = 'vertical-align: middle';
-          var editButton = document.createElement('button');
-          editButton.classList.add('btn', 'btn-default', 'btn-raised', 'btn-xs');
-          editButton.textContent = item['price'] + '$';
-          editButton.id = item['id'];
-          editButton.onclick = self.btnClickEdit;
-          td3.appendChild(editButton);
-          var td4 = document.createElement('td');
-          td4.classList.add('col-xs-6');
-          td4.textContent = item['description'];
-          tr1.appendChild(td1);
-          tr1.appendChild(td2);
-          tr1.appendChild(td3);
-          tr2.appendChild(td4);
-          table.appendChild(tr1);
-          table.appendChild(tr2);
+        var panel = $('<div>', { class: 'panel panel-material-grey' });
+
+        var panelHeading = $('<div>', {
+          'class': 'panel-heading',
+          'role': 'tab',
         });
-        panelContent.appendChild(table);
+        var panelHeadingButton = $('<button>', {
+          'type': 'button',
+          'class': 'btn btn-default btn-block',
+          'click':  self.accordionClick
+        })
+        // TODO
+        // When click, make arrow to right.
+        // Category diff color.
+        var panelHeadingText1 = $('<div>', { 'class': 'col-xs-6' }).append(
+          $('<h3>', { 'class': 'text-left' }).append(
+            $('<span>', { 'class': 'glyphicon glyphicon-chevron-down' })
+          ).append(document.createTextNode(element))
+        );
+        var panelHeadingText2 = $('<div>', { 'class': 'col-xs-6' }).append($('<h3>', { 'class': 'text-right', 'text': dateList[element]['sum'] + '$' }));
+        panelHeadingButton.append(panelHeadingText1).append(panelHeadingText2);
+        panelHeading.append(panelHeadingButton);
 
-        panel.appendChild(panelHeading);
-        panel.appendChild(panelContent);
+        var panelContent = $('<div>', {
+          'class': 'panel-collapse hiden',
+          'role': 'tabpanel'
+        }).on('transitionend', self.changeArrow);
 
-        accordion.appendChild(panel);
+        var ul = $('<ul>', { 'class': 'list-group' });
+        dateList[element]['items'].forEach(function (item) {
 
-        $('#main').html(accordion);
-        
+          var li = $('<li>', { 'class': 'list-group-item' });
+          var btn = $('<button>', { 'type': 'button', 'id': item.id, 'class': 'btn btn-default btn-block', 'click': self.itemClick });
+          var row1 = $('<div>', { 'class': 'row' }).append(
+            $('<div>', { 'class': 'col-xs-8' }).append(
+              $('<h4>', { 'class': 'text-left' }).append(
+                $('<span>', { 'class': 'label label-material-' + item.color, 'text': item.category })
+              ).append(
+                $('<small>', { 'text': ' ' + item.date })
+              )
+            )
+          ).append(
+            $('<div>', { 'class': 'col-xs-4' }).append(
+              $('<h4>', { 'class': 'text-right', 'text': item.price + '$' })
+            )
+          )
+          var row2 = $('<div>', { 'class': 'row' }).append(
+            $('<div>', { 'class': 'col-xs-12' }).append(
+              $('<h5>', { 'class': 'text-left', 'text': item.description })
+            )
+          )          
+          btn.append(row1).append(row2);
+          li.append(btn);
+          ul.append(li);
+
+        });
+        panelContent.append(ul);
+
+        panel.append(panelHeading).append(panelContent);
+
+        $('#accordion').append(panel);
+
       });
 
       $.material.init();
 
     },
 
-    btnClickEdit(event) {
+    changeArrow(event) {
+      var e = event.target;
+      var arrow = $(e).parent().find('.panel-heading span');
+      if ($(e).hasClass('show'))
+        $(arrow).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
+      else
+        $(arrow).removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down');
+    },
+
+    accordionClick(event){
+      var e = event.target;
+      var sibs = $(e).parent().siblings();
+      if ($(sibs).hasClass('show'))
+        $(sibs).removeClass('show').addClass('hiden');
+      else
+        $(sibs).removeClass('hiden').addClass('show');      
+    },
+
+    itemClick(event) {
 
       var btn = event.target;
       window.dispatchEvent(new CustomEvent('setNavbar', {

@@ -67,8 +67,8 @@
       var today = now.getFullYear() + "-" + (month) + "-" + (day);
       list.forEach(function (element) {
         $('#category').append($('<option>', {
-          text: element.description,
-          value: element.id
+          'text': element.description,
+          'value': element.id
         }));
       })
       $('#category').val(0);  // Default is Others.

@@ -62,13 +62,12 @@
       
       console.log(categories);
       categories.forEach(function (element) {
-        var li = $('<li>', { "class": "list-group-item" });
+        var li = $('<li>', { 'class': 'list-group-item' });
         var btn = $('<button>', {
-          id: element.id,
-          class: "btn btn-default btn btn-default btn-block btn-material-" + element.color,
-          click:  self.btnClickEdit,
-          html: element.description
-        });
+          'id': element.id,
+          'class': 'btn btn-default btn btn-default btn-block btn-material-' + element.color,
+          'click': self.btnClickEdit,
+        }).append($('<h4>', { 'text': element.description }));
         $(li).append(btn);
         $('#category-list').append(li);
       });      

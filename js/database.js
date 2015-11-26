@@ -262,14 +262,24 @@
     
     parseItems(items) {
 
-      var hashTable = this._categoriesList;
-      console.log(items);
+      var categories = this._categoriesList;
+      var hashTable = {};
+      categories.forEach(function (element) {
+        hashTable[element['id']] = {};
+        hashTable[element['id']]['description'] = element['description'];
+        hashTable[element['id']]['color'] = element['color'];
+      })
+      console.log(hashTable);
       items.forEach(function (element) {
         var idx = element['category'];
-        if (!hashTable[idx])
-          element['category'] = "Others"; // Defualt value
-        else
-          element['category'] = hashTable[idx];
+        if (!hashTable[idx]) {
+          element['category'] = hashTable[0]['description']; // Defualt value
+          element['color'] = hashTable[0]['color'];
+        }
+        else {
+          element['category'] = hashTable[idx]['description'];
+          element['color'] = hashTable[idx]['color'];
+        }
       });
       console.log(items);
       return items;
@@ -393,11 +403,7 @@
       db.categories        
         .toArray()
         .then((function (categories) {
-          var list = {};
-          categories.forEach(function (element) {
-            list[element['id']] = element['description'];
-          })
-          this._categoriesList = list;
+          this._categoriesList = categories;
         }).bind(this));
 
     }

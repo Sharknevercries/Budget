@@ -1,13 +1,48 @@
-﻿body{
+﻿body {
     padding-top: 50px;
 }
 
-.panel{
-    margin-bottom: 0px;
-}
-
-div#navbar > div{
+div#navbar > div {
     padding-left: 3px;
     padding-right: 3px;
 }
 
+.panel-heading {
+    padding: 0px 0px;
+}
+
+.navbar .panel {
+    margin-bottom: 0px;
+}
+
+.panel-heading > button {
+    margin: 0px 0px;
+    padding: 0px 5px;
+}
+
+.list-group-item > button {
+    padding: 0px 3px;
+    margin: 0px 0px;
+}
+
+.list-group .list-group-item {
+    padding: 3px 3px;
+}
+
+#accordion > div.panel > div.hiden {
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 3s ease-in-out;
+    -moz-transition: max-height 3s ease-in-out;
+    -o-transition: max-height 3s ease-in-out;
+    -webkit-transition: max-height 3s ease-in-out;
+}
+
+#accordion > div.panel > div.show {
+    max-height: 20000px;
+    overflow: hidden;
+    transition: max-height 3s ease-in-out;
+    -moz-transition: max-height 3s ease-in-out;
+    -o-transition: max-height 3s ease-in-out;
+    -webkit-transition: max-height 3s ease-in-out;
+}
