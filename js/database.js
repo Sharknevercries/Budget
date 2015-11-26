@@ -136,7 +136,7 @@
 
       db.items.add({ category: category, date: date, price: price, description: description })
         .then((function () {
-          this.setHint('Successfully add a record', 'success');
+          this.setHint('Successfully add a record.', 'success');
         }).bind(this))
         .catch((function (reason) {
           this.setHint(reason, 'danger');
@@ -300,7 +300,7 @@
 
       db.categories.add({ color: color, description: description })
         .then((function () {
-          this.setHint('Successfully add a category', 'success');
+          this.setHint('Successfully add a category.', 'success');
         }).bind(this))
         .catch((function (reason) {
           this.setHint(reason, 'danger');

@@ -63,48 +63,52 @@
       
       var items = this._items;
       var totalSum = 0;
-      var categorySum = {};
+      var categoryInfo = {};
       var maxCategorySum = 0;
 
       items.forEach(function (element) {
         var idx = element.category;
-        if (!categorySum[idx]) {
-          categorySum[idx] = 0;
+        if (!categoryInfo[idx]) {
+          categoryInfo[idx] = {};
+          categoryInfo[idx]['sum'] = 0;
+          categoryInfo[idx]['color'] = element.color;
         }
-        categorySum[idx] += element.price;
+        categoryInfo[idx]['sum'] += element.price;
       });
 
-      Object.keys(categorySum).forEach(function (element) {
-        totalSum += categorySum[element];
-        if(maxCategorySum < categorySum[element])
-          maxCategorySum = categorySum[element];
+      Object.keys(categoryInfo).forEach(function (element) {
+        totalSum += categoryInfo[element]['sum'];
+        if (maxCategorySum < categoryInfo[element]['sum'])
+          maxCategorySum = categoryInfo[element]['sum'];
       });
 
-      var title = document.querySelector('#title');
-      var h5 = document.createElement('h5');
-      h5.classList.add('text-center');
-      h5.textContent = this._monthParser[(new Date()).getMonth()];
-      var h3 = document.createElement('h3');
-      h3.classList.add('text-center');
-      h3.textContent = totalSum + '$';
-      title.appendChild(h5);
-      title.appendChild(h3);
+      $('#title').append(
+        $('<h4>', { 'class': 'text-center', 'text': this._monthParser[(new Date()).getMonth()] })
+      ).append(
+        $('<h3>', { 'class': 'text-center', 'text': totalSum + '$' })
+      );
 
-      var chart = document.querySelector('#chart');
-      Object.keys(categorySum).forEach(function(element){
-        var h6 = document.createElement('h6');
-        h6.textContent = element + " " + categorySum[element] + '$';
-        var outerDiv = document.createElement('div');
-        outerDiv.classList.add('progress');
-        var innerDiv = document.createElement('div');
-        innerDiv.classList.add('progress-bar');
-        innerDiv.setAttribute('role', 'progressbar');
-        innerDiv.setAttribute('aria-valuemin', '0');
-        innerDiv.setAttribute('aria-valuemax', '100');
-        innerDiv.style = "width: " + categorySum[element] / maxCategorySum * 100 + "%;";
-        outerDiv.appendChild(innerDiv);
-        h6.appendChild(outerDiv);
-        chart.appendChild(h6);
+      
+      Object.keys(categoryInfo).forEach(function (element) {
+        $('#chart').append(
+          $('<div>').append(
+            $('<h3>').append(
+              $('<span>', { 'class': 'label label-material-' + categoryInfo[element]['color'], 'text': element })
+            ).append(
+              $('<small>', { 'text': categoryInfo[element]['sum'] + '$' })
+            )
+          ).append(
+              $('<div>', { 'class': 'progress' }).append(
+                $('<div>', {
+                  'class': 'progress-bar progress-bar-material-' + categoryInfo[element]['color'],
+                  'role': 'progressbar',
+                  'aria-valuemin': '0',
+                  'aria-valuemax': '100',
+                  'style': 'width: ' + categoryInfo[element]['sum'] / maxCategorySum * 100 + '%'
+                })
+              )
+            )
+        )
       });
 
       $.material.init();
