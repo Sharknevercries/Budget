@@ -75,86 +75,99 @@
       var idxs = [];
       var dateList = {};
 
-      items.forEach(function (element) {
-        var idx = element.date.substr(0, 7);
-        if (!dateList[idx]) {
-          dateList[idx] = {};
-          dateList[idx]['sum'] = 0;
-          dateList[idx]['items'] = [];
-          idxs.push(idx);
-        }
-        dateList[idx]['items'].push(element);
-        dateList[idx]['sum'] += parseInt(element.price);
-      });
+      if (items.length > 0) {
 
-      this._dateList = dateList;
-      
-      idxs.forEach(function (element, idx) {
-
-        var panel = $('<div>', { class: 'panel panel-material-grey' });
-
-        var panelHeading = $('<div>', {
-          'id': element,
-          'class': 'panel-heading',
-          'role': 'tab'
+        items.forEach(function (element) {
+          var idx = element.date.substr(0, 7);
+          if (!dateList[idx]) {
+            dateList[idx] = {};
+            dateList[idx]['sum'] = 0;
+            dateList[idx]['items'] = [];
+            idxs.push(idx);
+          }
+          dateList[idx]['items'].push(element);
+          dateList[idx]['sum'] += parseInt(element.price);
         });
-        var panelHeadingButton = $('<button>', {
-          'type': 'button',
-          'class': 'btn btn-default btn-block',
-          'click':  self.accordionClick.bind(self)
-        })
-        var panelHeadingText1 = $('<div>', { 'class': 'col-xs-6' }).append(
-          $('<h4>', { 'class': 'text-left' }).append(
-            $('<i>', { 'class': 'fa fa-chevron-down' })
-          ).append(document.createTextNode(element))
-        );
-        var panelHeadingText2 = $('<div>', { 'class': 'col-xs-6' }).append($('<h4>', { 'class': 'text-right', 'text': dateList[element]['sum'] + '$' }));
-        panelHeadingButton.append(panelHeadingText1).append(panelHeadingText2);
-        panelHeading.append(panelHeadingButton);
 
-        var panelContent = $('<div>', {
-          'class': 'panel-collapse hiden',
-          'role': 'tabpanel'
-        }).on('transitionend', self.changeArrow);
+        this._dateList = dateList;
 
-        var ul = $('<ul>', { 'class': 'list-group' });
-        dateList[element]['items'].forEach(function (item, idx) {
+        idxs.forEach(function (element, idx) {
 
-          var li = $('<li>', { 'class': 'list-group-item' });
-          var btn = $('<button>', { 'type': 'button', 'id': item.id, 'class': 'btn btn-default btn-block', 'click': self.itemClick });
-          var row1 = $('<div>', { 'class': 'row' }).append(
-            $('<div>', { 'class': 'col-xs-8' }).append(
-              $('<h4>', { 'class': 'text-left' }).append(
-                $('<span>', { 'class': 'label label-material-' + item.color, 'text': item.category, 'style': 'text-transform: none' })
-              ).append(
-                $('<small>', { 'text': ' ' + item.date })
+          var panel = $('<div>', { class: 'panel panel-material-grey' });
+
+          var panelHeading = $('<div>', {
+            'id': element,
+            'class': 'panel-heading',
+            'role': 'tab'
+          });
+          var panelHeadingButton = $('<button>', {
+            'type': 'button',
+            'class': 'btn btn-default btn-block',
+            'click': self.accordionClick.bind(self)
+          })
+          var panelHeadingText1 = $('<div>', { 'class': 'col-xs-6' }).append(
+            $('<h4>', { 'class': 'text-left' }).append(
+              $('<i>', { 'class': 'fa fa-chevron-down' })
+            ).append(document.createTextNode(element))
+          );
+          var panelHeadingText2 = $('<div>', { 'class': 'col-xs-6' }).append($('<h4>', { 'class': 'text-right', 'text': dateList[element]['sum'] + '$' }));
+          panelHeadingButton.append(panelHeadingText1).append(panelHeadingText2);
+          panelHeading.append(panelHeadingButton);
+
+          var panelContent = $('<div>', {
+            'class': 'panel-collapse hiden',
+            'role': 'tabpanel'
+          }).on('transitionend', self.changeArrow);
+
+          var ul = $('<ul>', { 'class': 'list-group' });
+          dateList[element]['items'].forEach(function (item, idx) {
+
+            var li = $('<li>', { 'class': 'list-group-item' });
+            var btn = $('<button>', { 'type': 'button', 'id': item.id, 'class': 'btn btn-default btn-block', 'click': self.itemClick });
+            var row1 = $('<div>', { 'class': 'row' }).append(
+              $('<div>', { 'class': 'col-xs-8' }).append(
+                $('<h4>', { 'class': 'text-left' }).append(
+                  $('<span>', { 'class': 'label label-material-' + item.color, 'text': item.category, 'style': 'text-transform: none' })
+                ).append(
+                  $('<small>', { 'text': ' ' + item.date })
+                )
+              )
+            ).append(
+              $('<div>', { 'class': 'col-xs-4' }).append(
+                $('<h4>', { 'class': 'text-right', 'text': item.price + '$' })
               )
             )
-          ).append(
-            $('<div>', { 'class': 'col-xs-4' }).append(
-              $('<h4>', { 'class': 'text-right', 'text': item.price + '$' })
+            var row2 = $('<div>', { 'class': 'row' }).append(
+              $('<div>', { 'class': 'col-xs-12' }).append(
+                $('<p>', { 'class': 'text-left', 'text': item.description, 'style': 'text-transform: none' })
+              )
             )
-          )
-          var row2 = $('<div>', { 'class': 'row' }).append(
-            $('<div>', { 'class': 'col-xs-12' }).append(
-              $('<p>', { 'class': 'text-left', 'text': item.description, 'style': 'text-transform: none' })
-            )
-          )          
-          btn.append(row1).append(row2);
-          li.append(btn);
-          if (idx > 0) {
-            ul.append($('<hr>', { 'class': 'sub' }));
-          }
-          ul.append(li);
+            btn.append(row1).append(row2);
+            li.append(btn);
+            if (idx > 0) {
+              ul.append($('<hr>', { 'class': 'sub' }));
+            }
+            ul.append(li);
+
+          });
+          panelContent.append(ul);
+
+          panel.append(panelHeading).append(panelContent);
+
+          $('#accordion').append(panel);
 
         });
-        panelContent.append(ul);
 
-        panel.append(panelHeading).append(panelContent);
+      }
+      else {
 
-        $('#accordion').append(panel);
+        $('#accordion').append(
+         $('<div>').append(
+           $('<h3>', { 'class': 'text-center', 'text': 'Nothing Added' })
+         )
+        );
 
-      });
+      }
 
       $.material.init();
 

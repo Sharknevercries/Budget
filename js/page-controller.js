@@ -173,7 +173,7 @@
           }
         }))
         this.setNavbar('navbar-home');
-        this.setPage('page-home');
+        this.setPage('page-item-list');
       }).bind(this));
       $('#edit').click((function () {
         var id = $('#id').val();
