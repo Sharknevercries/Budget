@@ -121,7 +121,7 @@
 
       $('#hint').load('template/hint.html', function () {
         $('#hint-bg').addClass('alert-' + style);
-        $('#hint-text').text(msg);
+        $('#hint-text').text(msg).hide().fadeIn();
       });
 
     },
@@ -228,7 +228,7 @@
         })
         .catch((function (reason) {
           // Typically, there is no item in category.
-          window.dispatchEvent(new CustomEvent('getAllItems', {
+          window.dispatchEvent(new CustomEvent('getItemsByYearMonth', {
             detail: {
               target: source,
               items: null

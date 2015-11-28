@@ -52,8 +52,10 @@
 
     draw() {
 
-      $('#main').load('template/page-category-edit.html', this.setAction.bind(this));
-
+      $('#main').load('template/page-category-edit.html', (function () {
+        this.setAction();
+        $('#main').hide().fadeIn();
+      }).bind(this));
     },
 
     setAction() {

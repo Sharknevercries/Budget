@@ -36,7 +36,10 @@
 
     draw() {
 
-      $('#main').load('template/page-config.html', this.setAction.bind(this));
+      $('#main').load('template/page-config.html', (function () {
+        this.setAction();
+        $('#main').hide().fadeIn();
+      }).bind(this));
 
     },
 

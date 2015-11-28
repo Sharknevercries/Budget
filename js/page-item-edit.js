@@ -80,8 +80,11 @@
     },
 
     draw() {
-
-      $('#main').load('template/page-item-edit.html', this.setAction.bind(this));
+      
+      $('#main').load('template/page-item-edit.html', (function () {
+        this.setAction();
+        $('#main').hide().fadeIn();
+      }).bind(this));
 
     },
 

@@ -53,14 +53,21 @@
 
     draw() {
 
-      $('#main').load('template/page-home.html', this.drawData.bind(this));
+      $('#hint').append($('<i>', {
+        'id': 'loader',
+        'class': 'fa fa-refresh fa-spin fa-2x'
+      }));
+      $('#loader').css({ position: 'absolute', top: '50%', left: '50%', margin: '-14px 0 0 -14px' });
+      $('#main').load('template/page-home.html', (function () {
+        this.drawData();
+        $('#loader').remove();
+        $('#main').hide().fadeIn(1000);
+      }).bind(this));
 
     },
 
     drawData() {
 
-      // use jquery  to construct DOM
-      
       var items = this._items;
       var totalSum = 0;
       var categoryInfo = {};
@@ -74,42 +81,48 @@
           categoryInfo[idx]['color'] = element.color;
         }
         categoryInfo[idx]['sum'] += element.price;
-      });
-
-      Object.keys(categoryInfo).forEach(function (element) {
-        totalSum += categoryInfo[element]['sum'];
-        if (maxCategorySum < categoryInfo[element]['sum'])
-          maxCategorySum = categoryInfo[element]['sum'];
-      });
+        totalSum += element.price;
+      });      
 
       $('#title').append(
-        $('<h4>', { 'class': 'text-center', 'text': this._monthParser[(new Date()).getMonth()] })
+        $('<h3>', { 'class': 'text-center', 'text': this._monthParser[(new Date()).getMonth()] })
       ).append(
         $('<h3>', { 'class': 'text-center', 'text': totalSum + '$' })
       );
 
-      
-      Object.keys(categoryInfo).forEach(function (element) {
-        $('#chart').append(
-          $('<div>').append(
-            $('<h3>').append(
-              $('<span>', { 'class': 'label label-material-' + categoryInfo[element]['color'], 'text': element })
-            ).append(
-              $('<small>', { 'text': categoryInfo[element]['sum'] + '$' })
-            )
-          ).append(
-              $('<div>', { 'class': 'progress' }).append(
-                $('<div>', {
-                  'class': 'progress-bar progress-bar-material-' + categoryInfo[element]['color'],
-                  'role': 'progressbar',
-                  'aria-valuemin': '0',
-                  'aria-valuemax': '100',
-                  'style': 'width: ' + categoryInfo[element]['sum'] / maxCategorySum * 100 + '%'
-                })
+      if (Object.keys(categoryInfo).length > 0) {
+
+        Object.keys(categoryInfo).forEach(function (element) {
+          if (maxCategorySum < categoryInfo[element]['sum'])
+            maxCategorySum = categoryInfo[element]['sum'];
+        });
+
+        Object.keys(categoryInfo).forEach(function (element) {
+          $('#chart').append(
+            $('<div>').append(
+              $('<h3>').append(
+                $('<span>', { 'class': 'label label-material-' + categoryInfo[element]['color'], 'text': element, 'style': 'text-transform: none' })
+              ).append(
+                $('<small>', { 'text': categoryInfo[element]['sum'] + '$' })
               )
-            )
-        )
-      });
+            ).append(
+                $('<div>', { 'class': 'progress' }).append(
+                  $('<div>', {
+                    'class': 'progress-bar progress-bar-material-' + categoryInfo[element]['color'],
+                    'role': 'progressbar',
+                    'aria-valuemin': '0',
+                    'aria-valuemax': '100',
+                    'style': 'width: ' + categoryInfo[element]['sum'] / maxCategorySum * 100 + '%'
+                  })
+                )
+              )
+          )
+        });
+
+      }
+      else {
+
+      }
 
       $.material.init();
 

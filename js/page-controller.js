@@ -1,5 +1,9 @@
 ﻿(function (exports) {
 
+  // TODO
+  // Make pages and navbar-pages that can be routed
+  // Reflection or something else.
+
   var PageController = function () {
 
     this._pages = [];
@@ -73,9 +77,18 @@
     //
     //
 
+    drawNavbar(href, callback){
+
+      $('#navbar').load(href, (function () {
+        callback();
+        $('#navbar').hide().fadeIn();
+      }).bind(this));
+
+    },
+
     drawNavbarHome() {
 
-      $('#navbar').load('template/navbar-home.html', this.setNavbarHomeAction.bind(this));
+      this.drawNavbar('template/navbar-home.html', this.setNavbarHomeAction.bind(this));
 
     },
 
@@ -105,13 +118,13 @@
 
     drawNavbarItemEdit() {
 
-      $('#navbar').load('template/navbar-item-edit.html', this.setNavbarItemEditAction.bind(this));
+      this.drawNavbar('template/navbar-item-edit.html', this.setNavbarItemEditAction.bind(this));
 
     },
 
     setNavbarItemEditAction(){
 
-      $('#navbar-home').click((function () {
+      $('#go-back').click((function () {
         this.setNavbar('navbar-home');
         this.setPage('page-item-list');
       }).bind(this));
@@ -159,7 +172,7 @@
 
     drawNavbarItemAdd() {
 
-      $('#navbar').load('template/navbar-item-add.html', this.setNavbarItemAddAction.bind(this));
+      this.drawNavbar('template/navbar-item-add.html', this.setNavbarItemAddAction.bind(this));
 
     },
 
@@ -201,13 +214,13 @@
 
     drawNavbarCategoryHome() {
 
-      $('#navbar').load('template/navbar-category-home.html', this.setNavbarCategoryHomeAction.bind(this));
+      this.drawNavbar('template/navbar-category-home.html', this.setNavbarCategoryHomeAction.bind(this));
 
     },
 
     setNavbarCategoryHomeAction() {
 
-      $('#navbar-home').click((function () {
+      $('#go-back').click((function () {
         this.setPage('page-config');
         this.setNavbar('navbar-home');
       }).bind(this));
@@ -226,7 +239,7 @@
 
     drawNavbarCategoryAdd(){
 
-      $('#navbar').load('template/navbar-category-add.html', this.setNavbarCategoryAddAction.bind(this));
+      this.drawNavbar('template/navbar-category-add.html', this.setNavbarCategoryAddAction.bind(this));
 
     },
 
@@ -264,7 +277,7 @@
 
     drawNavbarCategoryEdit(){
 
-      $('#navbar').load('template/navbar-category-edit.html', this.setNavbarCategoryEditAction.bind(this));
+      this.drawNavbar('template/navbar-category-edit.html', this.setNavbarCategoryEditAction.bind(this));
 
     },
 

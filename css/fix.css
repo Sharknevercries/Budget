@@ -1,5 +1,5 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 64px;
 }
 
 div#navbar > div {
@@ -32,17 +32,50 @@ div#navbar > div {
 #accordion > div.panel > div.hiden {
     max-height: 0px;
     overflow: hidden;
-    transition: max-height 3s ease-in-out;
-    -moz-transition: max-height 3s ease-in-out;
-    -o-transition: max-height 3s ease-in-out;
-    -webkit-transition: max-height 3s ease-in-out;
+    transition: max-height 1.5s ease-in-out;
+    -moz-transition: max-height 1.5s ease-in-out;
+    -o-transition: max-height 1.5s ease-in-out;
+    -webkit-transition: max-height 1.5s ease-in-out;
 }
 
 #accordion > div.panel > div.show {
-    max-height: 20000px;
+    max-height: none;
     overflow: hidden;
-    transition: max-height 3s ease-in-out;
-    -moz-transition: max-height 3s ease-in-out;
-    -o-transition: max-height 3s ease-in-out;
-    -webkit-transition: max-height 3s ease-in-out;
+    transition: max-height 1.5s ease-in-out;
+    -moz-transition: max-height 1.5s ease-in-out;
+    -o-transition: max-height 1.5s ease-in-out;
+    -webkit-transition: max-height 1.5s ease-in-out;
+}
+
+.voffset1 { margin-top: 5px; }
+.voffset2 { margin-top: 10px; }
+.voffset3 { margin-top: 15px; }
+.voffset4 { margin-top: 30px; }
+.voffset5 { margin-top: 40px; }
+.voffset6 { margin-top: 60px; }
+.voffset7 { margin-top: 80px; }
+.voffset8 { margin-top: 100px; }
+.voffset9 { margin-top: 150px; }
+
+.formOffset{
+    margin-left: 48px;
+    margin-right: 48px;
+}
+
+hr{
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+hr.main{
+    border-color: black;
+}
+
+hr.sub{
+    border-color: darkgrey;
+}
+
+#navbar button{
+    padding-left: 10px;
+    padding-right: 10px;
 }

@@ -33,7 +33,10 @@
 
     draw() {
 
-      $('#main').load('template/page-category-add.html', this.setAction.bind(this));
+      $('#main').load('template/page-category-add.html', (function () {
+        this.setAction();
+        $('#main').hide().fadeIn();
+      }).bind(this));
 
     },
 

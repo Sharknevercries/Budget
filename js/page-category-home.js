@@ -51,7 +51,16 @@
 
     draw() {
 
-      $('#main').load('template/page-category-home.html', this.drawData.bind(this));
+      $('#hint').append($('<i>', {
+        'id': 'loader',
+        'class': 'fa fa-refresh fa-spin fa-2x'
+      }));
+      $('#loader').css({ position: 'absolute', top: '50%', left: '50%', margin: '-14px 0 0 -14px' });
+      $('#main').load('template/page-category-home.html', (function () {
+        this.drawData();
+        $('#loader').remove();
+        $('#main').hide().fadeIn();
+      }).bind(this));
 
     },
 
@@ -67,7 +76,7 @@
           'id': element.id,
           'class': 'btn btn-default btn btn-default btn-block btn-material-' + element.color,
           'click': self.btnClickEdit,
-        }).append($('<h4>', { 'text': element.description }));
+        }).append($('<h4>', { 'text': element.description, 'style': 'text-transform: none' }));
         $(li).append(btn);
         $('#category-list').append(li);
       });      

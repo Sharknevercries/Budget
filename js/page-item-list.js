@@ -2,6 +2,7 @@
 
   var PageItemList = function(){
     this._items = null;
+    this._dateList = null;
     this._eventCounter = 0;
   }
 
@@ -48,7 +49,16 @@
 
     draw() {
       
-      $('#main').load('template/page-item-list.html', this.drawData.bind(this));
+      $('#hint').append($('<i>', {
+        'id': 'loader',
+        'class': 'fa fa-refresh fa-spin fa-2x'
+      }));
+      $('#loader').css({ position: 'absolute', top: '50%', left: '50%', margin: '-14px 0 0 -14px' });
+      $('#main').load('template/page-item-list.html', (function () {
+        this.drawData();
+        $('#loader').remove();
+        $('#main').hide().fadeIn(1000);
+      }).bind(this));
 
     },
 
@@ -72,30 +82,28 @@
         dateList[idx]['sum'] += parseInt(element.price);
       });
 
-      console.log(dateList);
-
+      this._dateList = dateList;
+      
       idxs.forEach(function (element, idx) {
 
         var panel = $('<div>', { class: 'panel panel-material-grey' });
 
         var panelHeading = $('<div>', {
+          'id': element,
           'class': 'panel-heading',
-          'role': 'tab',
+          'role': 'tab'
         });
         var panelHeadingButton = $('<button>', {
           'type': 'button',
           'class': 'btn btn-default btn-block',
-          'click':  self.accordionClick
+          'click':  self.accordionClick.bind(self)
         })
-        // TODO
-        // When click, make arrow to right.
-        // Category diff color.
         var panelHeadingText1 = $('<div>', { 'class': 'col-xs-6' }).append(
-          $('<h3>', { 'class': 'text-left' }).append(
-            $('<span>', { 'class': 'glyphicon glyphicon-chevron-down' })
+          $('<h4>', { 'class': 'text-left' }).append(
+            $('<i>', { 'class': 'fa fa-chevron-down' })
           ).append(document.createTextNode(element))
         );
-        var panelHeadingText2 = $('<div>', { 'class': 'col-xs-6' }).append($('<h3>', { 'class': 'text-right', 'text': dateList[element]['sum'] + '$' }));
+        var panelHeadingText2 = $('<div>', { 'class': 'col-xs-6' }).append($('<h4>', { 'class': 'text-right', 'text': dateList[element]['sum'] + '$' }));
         panelHeadingButton.append(panelHeadingText1).append(panelHeadingText2);
         panelHeading.append(panelHeadingButton);
 
@@ -105,14 +113,14 @@
         }).on('transitionend', self.changeArrow);
 
         var ul = $('<ul>', { 'class': 'list-group' });
-        dateList[element]['items'].forEach(function (item) {
+        dateList[element]['items'].forEach(function (item, idx) {
 
           var li = $('<li>', { 'class': 'list-group-item' });
           var btn = $('<button>', { 'type': 'button', 'id': item.id, 'class': 'btn btn-default btn-block', 'click': self.itemClick });
           var row1 = $('<div>', { 'class': 'row' }).append(
             $('<div>', { 'class': 'col-xs-8' }).append(
               $('<h4>', { 'class': 'text-left' }).append(
-                $('<span>', { 'class': 'label label-material-' + item.color, 'text': item.category })
+                $('<span>', { 'class': 'label label-material-' + item.color, 'text': item.category, 'style': 'text-transform: none' })
               ).append(
                 $('<small>', { 'text': ' ' + item.date })
               )
@@ -124,11 +132,14 @@
           )
           var row2 = $('<div>', { 'class': 'row' }).append(
             $('<div>', { 'class': 'col-xs-12' }).append(
-              $('<h5>', { 'class': 'text-left', 'text': item.description })
+              $('<p>', { 'class': 'text-left', 'text': item.description, 'style': 'text-transform: none' })
             )
           )          
           btn.append(row1).append(row2);
           li.append(btn);
+          if (idx > 0) {
+            ul.append($('<hr>', { 'class': 'sub' }));
+          }
           ul.append(li);
 
         });
@@ -155,11 +166,14 @@
 
     accordionClick(event){
       var e = event.target;
-      var sibs = $(e).parent().siblings();
+      var heading = $(e).parent();
+      var id = $(heading).attr('id');
+      var count = this._dateList[id]['items'].length;
+      var sibs = $(heading).siblings();
       if ($(sibs).hasClass('show'))
-        $(sibs).removeClass('show').addClass('hiden');
+        $(sibs).removeClass('show').addClass('hiden').css({ 'max-height': '0px' });
       else
-        $(sibs).removeClass('hiden').addClass('show');      
+        $(sibs).removeClass('hiden').addClass('show').css({ 'max-height': count * 85 + 'px' });      
     },
 
     itemClick(event) {
