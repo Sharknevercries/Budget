@@ -19,12 +19,14 @@
                 target: 'database'
               }
             }));
+            this.resetWrapper();
+            if ($('#loader').length == 0)
+              this.setLoading();
           }
           break;
         case 'getAllItems':
           if (event.detail.target == 'page-item-list') {
             this.setItems(event.detail.items);
-            this.resetWrapper();
             this.draw();
           }
           break;
@@ -47,13 +49,16 @@
 
     },
 
-    draw() {
-      
+    setLoading() {
       $('#hint').append($('<i>', {
         'id': 'loader',
         'class': 'fa fa-refresh fa-spin fa-2x'
       }));
       $('#loader').css({ position: 'absolute', top: '50%', left: '50%', margin: '-14px 0 0 -14px' });
+    },
+
+    draw() {
+      
       $('#main').load('template/page-item-list.html', (function () {
         this.drawData();
         $('#loader').remove();

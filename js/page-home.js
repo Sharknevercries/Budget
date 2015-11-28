@@ -21,13 +21,15 @@
                 target: 'database'
               }
             }));
+            this.resetWrapper();
+            if ($('#loader').length == 0)
+              this.setLoading();
           }
           break;
         case 'getItemsByYearMonth':
           if (event.detail.target == 'page-home') {
             var items = event.detail.items;
             this.setItems(items);
-            this.resetWrapper();
             this.draw();
           }
           break;
@@ -47,17 +49,21 @@
 
     resetWrapper() {
 
+      $('hint').html('');
       $('#main').html('');
 
     },
 
-    draw() {
-
+    setLoading(){
       $('#hint').append($('<i>', {
         'id': 'loader',
         'class': 'fa fa-refresh fa-spin fa-2x'
       }));
       $('#loader').css({ position: 'absolute', top: '50%', left: '50%', margin: '-14px 0 0 -14px' });
+    },
+
+    draw() {
+      
       $('#main').load('template/page-home.html', (function () {
         this.drawData();
         $('#loader').remove();

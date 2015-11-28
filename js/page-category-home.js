@@ -18,12 +18,14 @@
                 target: 'database'
               }
             }))
+            this.resetWrapper();
+            if ($('#loader').length == 0)
+              this.setLoading();
           }
           break;
         case 'getAllCategories':
           if (event.detail.target == 'page-category-home') {
             this.setCategories(event.detail.categories);
-            this.resetWrapper();
             this.draw();
           }
           break;
@@ -39,6 +41,7 @@
 
     resetWrapper() {
 
+      $('hint').html('');
       $('#main').html('');
 
     },
@@ -49,13 +52,16 @@
 
     },
 
-    draw() {
-
+    setLoading() {
       $('#hint').append($('<i>', {
         'id': 'loader',
         'class': 'fa fa-refresh fa-spin fa-2x'
       }));
       $('#loader').css({ position: 'absolute', top: '50%', left: '50%', margin: '-14px 0 0 -14px' });
+    },
+
+    draw() {
+      
       $('#main').load('template/page-category-home.html', (function () {
         this.drawData();
         $('#loader').remove();

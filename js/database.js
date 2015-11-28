@@ -117,15 +117,6 @@
     //
     //
 
-    setHint(msg, style){
-
-      $('#hint').load('template/hint.html', function () {
-        $('#hint-bg').addClass('alert-' + style);
-        $('#hint-text').text(msg).hide().fadeIn();
-      });
-
-    },
-
     addItem(data) {
 
       var db = this._db;
@@ -134,13 +125,10 @@
       var date = data.date;
       var description = data.description;
 
-      db.items.add({ category: category, date: date, price: price, description: description })
-        .then((function () {
-          this.setHint('Successfully add a record.', 'success');
-        }).bind(this))
-        .catch((function (reason) {
-          this.setHint(reason, 'danger');
-        }).bind(this));
+      db.items.add({ category: category, date: date, price: price, description: description })        
+        .catch(function (reason) {
+          alert(reason);
+        });
 
     },
 
@@ -152,12 +140,9 @@
         .where('id')
         .equals(id)
         .delete()
-        .then((function () {
-          this.setHint('Successfully delete the record.', 'success');
-        }).bind(this))
-        .catch((function (reason) {
-          this.setHint(reason, 'danger');
-        }).bind(this));
+        .catch(function (reason) {
+          alert(reason);
+        });
 
     },
 
@@ -172,13 +157,10 @@
       db.items
         .where('id')
         .equals(id)
-        .modify({ price: price, category: category, date: date, description: description })
-        .then((function () {
-          this.setHint('Successfully edit the record.', 'success');
-        }).bind(this))
-        .catch((function (reason) {
-          this.setHint(reason, 'danger');
-        }).bind(this));
+        .modify({ price: price, category: category, date: date, description: description })        
+        .catch(function (reason) {
+          alert(reason);
+        });
 
     },
 
@@ -254,9 +236,9 @@
             }
           }))
         })
-        .catch((function (reason) {
-          this.setHint(reason, 'danger');
-        }).bind(this));
+        .catch(function (reason) {
+          alert(reason);
+        });
 
     },
     
@@ -269,7 +251,6 @@
         hashTable[element['id']]['description'] = element['description'];
         hashTable[element['id']]['color'] = element['color'];
       })
-      console.log(hashTable);
       items.forEach(function (element) {
         var idx = element['category'];
         if (!hashTable[idx]) {
@@ -281,7 +262,6 @@
           element['color'] = hashTable[idx]['color'];
         }
       });
-      console.log(items);
       return items;
 
     },
@@ -298,13 +278,10 @@
       var color = data.color;
       var description = data.description;
 
-      db.categories.add({ color: color, description: description })
-        .then((function () {
-          this.setHint('Successfully add a category.', 'success');
-        }).bind(this))
-        .catch((function (reason) {
-          this.setHint(reason, 'danger');
-        }).bind(this))
+      db.categories.add({ color: color, description: description })        
+        .catch(function (reason) {
+          alert(reason);
+        })
         .then(this.updateCategoriesList.bind(this));
 
     },
@@ -320,12 +297,9 @@
         .where('id')
         .equals(id)
         .modify({ color: color, description: description })
-        .then((function () {
-          this.setHint('Successfully edit the category.', 'success');
-        }).bind(this))
-        .catch((function (reason) {
-          this.setHint(reason, 'danger');
-        }).bind(this))
+        .catch(function (reason) {
+          alert(reason);
+        })
         .then(this.updateCategoriesList.bind(this));
 
     },
@@ -338,12 +312,9 @@
         .where('id')
         .equals(id)
         .delete()
-        .then((function () {
-          this.setHint('Successfully delete the category.', 'success');
-        }).bind(this))
-        .catch((function (reason) {
-          this.setHint(reason, 'danger');
-        }).bind(this))
+        .catch(function (reason) {
+          alert(reason);
+        })
         .then(this.updateCategoriesList.bind(this));
 
     },
@@ -391,9 +362,9 @@
             }
           }))
         })
-      .catch((function (reason) {
-        this.setHint(reason, 'danger');
-      }).bind(this));
+      .catch(function (reason) {
+        alert(reason);
+      });
 
     },
 
