@@ -164,11 +164,12 @@
         $(arrow).removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down');
     },
 
-    accordionClick(event){
+    accordionClick(event) {
+      var dateList = this._dateList;
       var e = event.target;
       var heading = $(e).parent();
       var id = $(heading).attr('id');
-      var count = this._dateList[id]['items'].length;
+      var count = dateList[id]['items'].length;
       var sibs = $(heading).siblings();
       if ($(sibs).hasClass('show'))
         $(sibs).removeClass('show').addClass('hiden').css({ 'max-height': '0px' });

@@ -1,12 +1,17 @@
 ﻿(function (exports) {
 
   // TODO
-  // Make pages and navbar-pages that can be routed
-  // Reflection or something else.
+  // 1. Make pages to follow standard flow like below:
+  // called by page-controller -> requestData -> draw template -> draw data -> put actions.
+  //
+  // 2. Make navbars to split into many files.
 
-  var PageController = function () {
+  var PageController = function (navbarNames, pagesNames) {
 
-    this._pages = [];
+    this._navbarNames = navbarNames;
+    this._pageNames = pagesNames;
+    this._navbars = {};
+    this._pages = {};
 
   }
 
@@ -16,18 +21,10 @@
 
       switch (event.type) {
         case 'setNavbar':
-          if (event.detail.page == 'navbar-home')
-            this.drawNavbarHome();
-          else if (event.detail.page == 'navbar-item-add')
-            this.drawNavbarItemAdd();
-          else if (event.detail.page == 'navbar-item-edit')
-            this.drawNavbarItemEdit();
-          else if (event.detail.page == 'navbar-category-home')
-            this.drawNavbarCategoryHome();
-          else if (event.detail.page == 'navbar-category-add')
-            this.drawNavbarCategoryAdd();
-          else if (event.detail.page == 'navbar-category-edit')
-            this.drawNavbarCategoryEdit();
+          this._navbars[event.detail.page]();
+          break;
+        case 'setPage':
+          this._pages[event.detail.page].draw();
           break;
       }
 
@@ -36,20 +33,56 @@
     initialize() {
 
       window.addEventListener('setNavbar', this);
-      this._pages.push(new PageHome());
-      this._pages.push(new PageConfig());
-      this._pages.push(new PageItemAdd());
-      this._pages.push(new PageItemEdit());
-      this._pages.push(new PageItemList());
-      this._pages.push(new PageCategoryHome());
-      this._pages.push(new PageCategoryAdd());
-      this._pages.push(new PageCategoryEdit());
-      this._pages.forEach(function (element) {
-        element.initialize();
-      });
+      //window.addEventListener('setPage', this);
+      var navbarNames = this._navbarNames;
+      var pageNames = this._pageNames;
+      navbarNames.forEach(function (navbarName) {
+        this._navbars[navbarName] = this.addNavbar(navbarName);
+      }, this);
+      pageNames.forEach(function (pageName) {
+        this._pages[pageName] = this.addPage(pageName);
+        this._pages[pageName].initialize();
+      }, this);
 
     },
 
+    addNavbar(navbarName) {
+      switch (navbarName) {
+        case 'navbar-home':
+          return this.drawNavbarHome.bind(this);
+        case 'navbar-item-add':
+          return this.drawNavbarItemAdd.bind(this);
+        case 'navbar-item-edit':
+          return this.drawNavbarItemEdit.bind(this);
+        case 'navbar-category-home':
+          return this.drawNavbarCategoryHome.bind(this);
+        case 'navbar-category-add':
+          return this.drawNavbarCategoryAdd.bind(this);
+        case 'navbar-category-edit':
+          return this.drawNavbarCategoryEdit.bind(this);
+      }
+    },
+
+    addPage(pageName){
+      switch (pageName) {
+        case 'page-home':
+          return new PageHome();
+        case 'page-config':
+          return new PageConfig();
+        case 'page-item-list':
+          return new PageItemList();
+        case 'page-item-add':
+          return new PageItemAdd();
+        case 'page-item-edit':
+          return new PageItemEdit();
+        case 'page-category-home':
+          return new PageCategoryHome();
+        case 'page-category-add':
+          return new PageCategoryAdd();
+        case 'page-category-edit':
+          return new PageCategoryEdit();
+      }
+    },
 
     setNavbar(page) {
 
