@@ -60,6 +60,8 @@
           return this.drawNavbarCategoryAdd.bind(this);
         case 'navbar-category-edit':
           return this.drawNavbarCategoryEdit.bind(this);
+        case 'navbar-about':
+          return this.drawNavbarAbout.bind(this);
       }
     },
 
@@ -81,6 +83,8 @@
           return new PageCategoryAdd();
         case 'page-category-edit':
           return new PageCategoryEdit();
+        case 'page-about':
+          return new PageAbout();
       }
     },
 
@@ -348,6 +352,27 @@
           this.setNavbar('navbar-category-home');
           this.setPage('page-category-home');
         }
+      }).bind(this));
+
+    },
+
+    //
+    //
+    //  Draw navbar-about section
+    //
+    //
+
+    drawNavbarAbout(){
+
+      this.drawNavbar('template/navbar-about.html', this.setNavbarAboutAction.bind(this));
+
+    },
+
+    setNavbarAboutAction() {
+
+      $('#go-back').click((function () {
+        this.setPage('page-config');
+        this.setNavbar('navbar-home');
       }).bind(this));
 
     }

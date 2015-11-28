@@ -57,6 +57,18 @@
           }
         }));
       }).bind(this));
+      $('#about').click((function () {
+        window.dispatchEvent(new CustomEvent('setNavbar', {
+          detail: {
+            page: 'navbar-about'
+          }
+        }));
+        window.dispatchEvent(new CustomEvent('setPage', {
+          detail: {
+            page: 'page-about'
+          }
+        }));
+      }).bind(this));
       $.material.init();
 
     }

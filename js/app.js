@@ -8,12 +8,12 @@ window.addEventListener('DOMContentLoaded', function (event) {
   var database = new Database();
   var navbars = [
     'navbar-category-add', 'navbar-category-edit', 'navbar-category-home',
-    'navbar-home', 'navbar-item-add', 'navbar-item-edit'
+    'navbar-home', 'navbar-item-add', 'navbar-item-edit', 'navbar-about'
   ];
   var pages = [
-    'page-home', 'page-config',
-    'page-item-list', 'page-item-add', 'page-item-edit',
-    'page-category-home', 'page-category-add', 'page-category-edit'
+    'page-home', 'page-item-list', 'page-item-add', 'page-item-edit',
+    'page-category-home', 'page-category-add', 'page-category-edit',
+    'page-config', 'page-about'
   ];
   var pageController = new PageController(navbars, pages);
   database.initialize();

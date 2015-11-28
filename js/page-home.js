@@ -122,6 +122,11 @@
       }
       else {
 
+        $('#chart').append(
+          $('<div>').append(
+            $('<h3>', { 'class': 'text-center', 'text': 'Nothing Added This Month' })
+          )
+        );
       }
 
       $.material.init();
