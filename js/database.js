@@ -111,6 +111,12 @@
 
     },
 
+    showHint(type, title, msg){
+      
+      toastr[type](msg, title, { timeOut: 3000, positionClass: 'toast-bottom-center' });
+
+    },
+
     //
     //
     //  Items
@@ -125,10 +131,13 @@
       var date = data.date;
       var description = data.description;
 
-      db.items.add({ category: category, date: date, price: price, description: description })        
-        .catch(function (reason) {
-          alert(reason);
-        });
+      db.items.add({ category: category, date: date, price: price, description: description })
+        .then((function () {
+          this.showHint('success', 'Success', 'Add a record.');
+        }).bind(this))
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this));
 
     },
 
@@ -140,9 +149,12 @@
         .where('id')
         .equals(id)
         .delete()
-        .catch(function (reason) {
-          alert(reason);
-        });
+        .then((function () {
+          this.showHint('success', 'Success', 'Delete the record.');
+        }).bind(this))
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this));
 
     },
 
@@ -157,10 +169,13 @@
       db.items
         .where('id')
         .equals(id)
-        .modify({ price: price, category: category, date: date, description: description })        
-        .catch(function (reason) {
-          alert(reason);
-        });
+        .modify({ price: price, category: category, date: date, description: description })
+        .then((function () {
+          this.showHint('success', 'Success', 'Edit the record.');
+        }).bind(this))
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this));
 
     },
 
@@ -236,9 +251,9 @@
             }
           }))
         })
-        .catch(function (reason) {
-          alert(reason);
-        });
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this));
 
     },
     
@@ -278,10 +293,13 @@
       var color = data.color;
       var description = data.description;
 
-      db.categories.add({ color: color, description: description })        
-        .catch(function (reason) {
-          alert(reason);
-        })
+      db.categories.add({ color: color, description: description })
+        .then((function () {
+          this.showHint('success', 'Success', 'Add a category.');
+        }).bind(this))
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this))
         .then(this.updateCategoriesList.bind(this));
 
     },
@@ -297,9 +315,12 @@
         .where('id')
         .equals(id)
         .modify({ color: color, description: description })
-        .catch(function (reason) {
-          alert(reason);
-        })
+        .then((function () {
+          this.showHint('success', 'Success', 'Edit the category.');
+        }).bind(this))
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this))
         .then(this.updateCategoriesList.bind(this));
 
     },
@@ -312,9 +333,12 @@
         .where('id')
         .equals(id)
         .delete()
-        .catch(function (reason) {
-          alert(reason);
-        })
+        .then((function () {
+          this.showHint('success', 'Success', 'Delete the category.');
+        }).bind(this))
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this))
         .then(this.updateCategoriesList.bind(this));
 
     },
@@ -342,7 +366,7 @@
               categories: null
             }
           }));
-        }).bind(this))
+        }).bind(this));
 
     },
 
@@ -362,19 +386,22 @@
             }
           }))
         })
-      .catch(function (reason) {
-        alert(reason);
-      });
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this));
 
     },
 
     updateCategoriesList() {
 
       var db = this._db;
-      db.categories        
+      db.categories
         .toArray()
         .then((function (categories) {
           this._categoriesList = categories;
+        }).bind(this))
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
         }).bind(this));
 
     }
