@@ -113,7 +113,7 @@
 
     showHint(type, title, msg){
       
-      toastr[type](msg, title, { timeOut: 3000, positionClass: 'toast-bottom-center' });
+      toastr[type](msg, title, { timeOut: 3000, positionClass: 'toast-bottom-center', preventDuplicates: true });
 
     },
 

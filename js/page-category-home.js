@@ -101,21 +101,20 @@
 
       var btn = event.target;
       if (btn.id == 0) {
-        alert("You can't edit the default category.");
+        toastr['error']('Can not edit the default category', 'Error', { timeOut: 3000, positionClass: 'toast-bottom-center', preventDuplicates: true });
+        return;
       }
-      else {
-        window.dispatchEvent(new CustomEvent('setNavbar', {
-          detail: {
-            page: 'navbar-category-edit'
-          }
-        }));
-        window.dispatchEvent(new CustomEvent('setPage', {
-          detail: {
-            page: 'page-category-edit',
-            id: btn.id
-          }
-        }));
-      }
+      window.dispatchEvent(new CustomEvent('setNavbar', {
+        detail: {
+          page: 'navbar-category-edit'
+        }
+      }));
+      window.dispatchEvent(new CustomEvent('setPage', {
+        detail: {
+          page: 'page-category-edit',
+          id: btn.id
+        }
+      }));
     }
 
   }

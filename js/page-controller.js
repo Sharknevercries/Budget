@@ -23,9 +23,6 @@
         case 'setNavbar':
           this._navbars[event.detail.page]();
           break;
-        case 'setPage':
-          this._pages[event.detail.page].draw();
-          break;
       }
 
     },
@@ -33,7 +30,6 @@
     initialize() {
 
       window.addEventListener('setNavbar', this);
-      //window.addEventListener('setPage', this);
       var navbarNames = this._navbarNames;
       var pageNames = this._pageNames;
       navbarNames.forEach(function (navbarName) {
@@ -105,6 +101,12 @@
           page: page
         }
       }));
+
+    },
+
+    showHint(type, title, msg) {
+
+      toastr[type](msg, title, { timeOut: 3000, positionClass: 'toast-bottom-center', preventDuplicates: true });
 
     },
 
@@ -182,21 +184,20 @@
         var date = $('#date').val();
         var description = $('#description').val();
         if (!($.isNumeric(price) && price == Math.floor(price) && price >= 0)) {
-          alert("Price must be positive integer or zero.");
+          this.showHint('error', 'Invalid Input', 'Price must be positive integer or zero');
+          return;
         }
-        else {
-          window.dispatchEvent(new CustomEvent('editItem', {
-            detail: {
-              id: id,
-              price: price,
-              category: category,
-              date: date,
-              description: description
-            }
-          }));
-          this.setNavbar('navbar-home');
-          this.setPage('page-home');
-        }
+        window.dispatchEvent(new CustomEvent('editItem', {
+          detail: {
+            id: id,
+            price: price,
+            category: category,
+            date: date,
+            description: description
+          }
+        }));
+        this.setNavbar('navbar-home');
+        this.setPage('page-home');
       }).bind(this));
 
     },
@@ -219,26 +220,25 @@
         this.setNavbar('navbar-home');
         this.setPage('page-home');
       }).bind(this));
-      $('#add').click((function(){
+      $('#add').click((function () {
         var price = $('#price').val();
         var category = $('#category option:selected').val();
         var date = $('#date').val();
         var description = $('#description').val();
         if (!($.isNumeric(price) && price == Math.floor(price) && price >= 0)) {
-          alert("Price must be positive integer or zero.");
+          this.showHint('error', 'Invalid Input', 'Price must be positive integer or zero');
+          return;
         }
-        else {
-          window.dispatchEvent(new CustomEvent('addItem', {
-            detail: {
-              price: price,
-              category: category,
-              date: date,
-              description: description
-            }
-          }));
-          this.setNavbar('navbar-home');
-          this.setPage('page-home');
-        }
+        window.dispatchEvent(new CustomEvent('addItem', {
+          detail: {
+            price: price,
+            category: category,
+            date: date,
+            description: description
+          }
+        }));
+        this.setNavbar('navbar-home');
+        this.setPage('page-home');
       }).bind(this));
 
     },
@@ -290,18 +290,17 @@
         var description = $('#description').val();
         var color = $('#color option:selected').val();
         if (description == '') {
-          alert("Description must not be empty!");
+          this.showHint('error', 'Invalid Input', 'Description must not be empty');
+          return;
         }
-        else {
-          window.dispatchEvent(new CustomEvent('addCategory', {
-            detail: {
-              description: description,
-              color: color
-            }
-          }));
-          this.setPage('page-category-home');
-          this.setNavbar('navbar-category-home');
-        }
+        window.dispatchEvent(new CustomEvent('addCategory', {
+          detail: {
+            description: description,
+            color: color
+          }
+        }));
+        this.setPage('page-category-home');
+        this.setNavbar('navbar-category-home');
       }).bind(this));
 
     },
@@ -339,19 +338,18 @@
         var color = $('#color option:selected').val();
         var description = $('#description').val();
         if (description == '') {
-          alert("Description must not be empty!");
+          this.showHint('error', 'Invalid Input', 'Description must not be empty');
+          return;
         }
-        else {
-          window.dispatchEvent(new CustomEvent('editCategory', {
-            detail: {
-              id: id,
-              color: color,
-              description: description
-            }
-          }));
-          this.setNavbar('navbar-category-home');
-          this.setPage('page-category-home');
-        }
+        window.dispatchEvent(new CustomEvent('editCategory', {
+          detail: {
+            id: id,
+            color: color,
+            description: description
+          }
+        }));
+        this.setNavbar('navbar-category-home');
+        this.setPage('page-category-home');
       }).bind(this));
 
     },
