@@ -3,7 +3,6 @@
   var Database = function () {
 
     this._db = null;
-    this._categories = null;
     
   }
 
@@ -39,6 +38,7 @@
         case 'getAllItems':
           if (event.detail.target == 'database') {
             this.getAllItems(event.detail.source)
+                .then(this.parseItems.bind(this))
                 .then((function (items) {
                   this.response(items, event.detail.source, event.type);
                 }).bind(this));
@@ -47,6 +47,7 @@
         case 'getItemsByYearMonth':
           if (event.detail.target == 'database') {
             this.getItemsByYearMonth(event.detail.year_month)
+                .then(this.parseItems.bind(this))
                 .then((function (items) {
                   this.response(items, event.detail.source, event.type);
                 }).bind(this));
@@ -260,25 +261,34 @@
     
     parseItems(items) {
 
-      var categories = this._categoriesList;
-      var hashTable = {};
-      categories.forEach(function (element) {
-        hashTable[element['id']] = {};
-        hashTable[element['id']]['description'] = element['description'];
-        hashTable[element['id']]['color'] = element['color'];
-      })
-      items.forEach(function (element) {
-        var idx = element['category'];
-        if (!hashTable[idx]) {
-          element['category'] = hashTable[0]['description']; // Defualt value
-          element['color'] = hashTable[0]['color'];
-        }
-        else {
-          element['category'] = hashTable[idx]['description'];
-          element['color'] = hashTable[idx]['color'];
-        }
-      });
-      return items;
+      var db = this._db;
+      return db.categories
+        .toArray()
+        .then((function (categories) {
+
+          var hashTable = {};
+          categories.forEach(function (element) {
+            hashTable[element['id']] = {};
+            hashTable[element['id']]['description'] = element['description'];
+            hashTable[element['id']]['color'] = element['color'];
+          })
+          items.forEach(function (element) {
+            var idx = element['category'];
+            if (!hashTable[idx]) {
+              element['category'] = hashTable[0]['description']; // Defualt value
+              element['color'] = hashTable[0]['color'];
+            }
+            else {
+              element['category'] = hashTable[idx]['description'];
+              element['color'] = hashTable[idx]['color'];
+            }
+          });
+          return items;
+
+        }).bind(this))
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this));
 
     },
 
@@ -301,7 +311,6 @@
         .catch((function (reason) {
           this.showHint('error', 'Error', reason);
         }).bind(this))
-        .then(this.updateCategoriesList.bind(this));
 
     },
 
@@ -322,7 +331,6 @@
         .catch((function (reason) {
           this.showHint('error', 'Error', reason);
         }).bind(this))
-        .then(this.updateCategoriesList.bind(this));
 
     },
 
@@ -340,7 +348,6 @@
         .catch((function (reason) {
           this.showHint('error', 'Error', reason);
         }).bind(this))
-        .then(this.updateCategoriesList.bind(this));
 
     },
 
