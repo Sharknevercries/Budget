@@ -37,7 +37,7 @@
           break;
         case 'getAllItems':
           if (event.detail.target == 'database') {
-            this.getAllItems(event.detail.source)
+            this.getAllItems()
                 .then(this.parseItems.bind(this))
                 .then((function (items) {
                   this.response(items, event.detail.source, event.type);
@@ -49,6 +49,7 @@
             this.getItemsByYearMonth(event.detail.year_month)
                 .then(this.parseItems.bind(this))
                 .then((function (items) {
+                  console.log(items);
                   this.response(items, event.detail.source, event.type);
                 }).bind(this));
           }
@@ -71,7 +72,7 @@
           break;
         case 'getAllCategories':
           if (event.detail.target == 'database') {
-            this.getAllCategories(event.detail)
+            this.getAllCategories()
                 .then((function (categories) {
                   this.response(categories, event.detail.source, event.type);
                 }).bind(this));
@@ -79,7 +80,7 @@
           break;
         case 'getCategoryById':
           if (event.detail.target == 'database') {
-            this.getCategoryById(event.detail.id, event.detail.source)
+            this.getCategoryById(event.detail.id)
                 .then((function (category) {
                   this.response(category, event.detail.source, event.type);
                 }).bind(this));
@@ -207,14 +208,13 @@
 
     },
 
-    getAllItems(source) {
+    getAllItems() {
 
       var db = this._db;
       return db.items
         .orderBy('date')
         .reverse()
         .toArray()
-        .then(this.parseItems.bind(this))
         .then(function (items) {
           return items;
         })
@@ -223,14 +223,13 @@
         })
     },
 
-    getItemsByYearMonth(source, year_month) {
+    getItemsByYearMonth(year_month) {
 
       var db = this._db;
       return db.items
         .where('date')
         .between(year_month + '-01', year_month + '-31', true, true)
         .toArray()
-        .then(this.parseItems.bind(this))
         .then(function (items) {
           return items;
         })
@@ -241,7 +240,7 @@
 
     },
 
-    getItemById(id, source){
+    getItemById(id){
 
       var db = this._db;
       id = parseInt(id);
@@ -351,7 +350,7 @@
 
     },
 
-    getAllCategories(data) {
+    getAllCategories() {
 
       var db = this._db;
       return db.categories
@@ -368,7 +367,7 @@
 
     },
 
-    getCategoryById(id, source){
+    getCategoryById(id){
 
       var db = this._db;
       id = parseInt(id);
