@@ -26,7 +26,7 @@
           break;
         case 'getAllItems':
           if (event.detail.target == 'page-item-list') {
-            this.setItems(event.detail.items);
+            this.setItems(event.detail.result);
             this.draw();
           }
           break;

@@ -23,7 +23,7 @@
           break;
         case 'getCategoryById':
           if (event.detail.target == 'page-category-edit') {
-            this.setCategory(event.detail.category);
+            this.setCategory(event.detail.result);
             this.resetWrapper();
             this.draw();
           }
@@ -61,7 +61,6 @@
     setAction() {
 
       var category = this._category;
-      console.log(category);
       var id = category.id;
       var color = category.color;
       var description = category.description;

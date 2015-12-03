@@ -32,13 +32,13 @@
           break;
         case 'getItemById':
           if (event.detail.target == 'page-item-edit') {
-            this.setItem(event.detail.item);
+            this.setItem(event.detail.result);
             this.dataArrived();
           }
           break;
         case 'getAllCategories':
           if (event.detail.target == 'page-item-edit') {
-            this.setCategories(event.detail.categories);
+            this.setCategories(event.detail.result);
             this.dataArrived();
           }
           break;

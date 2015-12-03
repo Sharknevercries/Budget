@@ -30,17 +30,26 @@
           break;
         case 'getItemById':
           if (event.detail.target == 'database') {
-            this.getItemById(event.detail.id, event.detail.source);
+            this.getItemById(event.detail.id)
+                .then((function (item) {
+                  this.response(item, event.detail.source, event.type);
+                }).bind(this));
           }
           break;
         case 'getAllItems':
           if (event.detail.target == 'database') {
-            this.getAllItems(event.detail.source);
+            this.getAllItems(event.detail.source)
+                .then((function (items) {
+                  this.response(items, event.detail.source, event.type);
+                }).bind(this));
           }
           break;
         case 'getItemsByYearMonth':
           if (event.detail.target == 'database') {
-            this.getItemsByYearMonth(event.detail.source, event.detail.year_month);
+            this.getItemsByYearMonth(event.detail.year_month)
+                .then((function (items) {
+                  this.response(items, event.detail.source, event.type);
+                }).bind(this));
           }
           break;
 
@@ -61,12 +70,18 @@
           break;
         case 'getAllCategories':
           if (event.detail.target == 'database') {
-            this.getAllCategories(event.detail);
+            this.getAllCategories(event.detail)
+                .then((function (categories) {
+                  this.response(categories, event.detail.source, event.type);
+                }).bind(this));
           }
           break;
         case 'getCategoryById':
           if (event.detail.target == 'database') {
-            this.getCategoryById(event.detail.id, event.detail.source);
+            this.getCategoryById(event.detail.id, event.detail.source)
+                .then((function (category) {
+                  this.response(category, event.detail.source, event.type);
+                }).bind(this));
           }
           break;
 
@@ -99,21 +114,33 @@
         items: "++id,category,date,price,description",
         categories: "++id,color,description"
       });
-      db.open();
+      db.open();      
+      
+      this.addDefaultCategory();
+      this.updateCategoriesList();
 
+    },
+
+    addDefaultCategory() {
+
+      var db = this._db;
       db.categories
         .put({ id: 0, color: "grey", description: "Others" })
-      .catch(function (reason) {
-        alert(reason);
-      });
-      
-      this.updateCategoriesList();
+        .catch((function (reason) {
+          this.showHint('error', 'Error', reason);
+        }).bind(this));
 
     },
 
     showHint(type, title, msg){
       
       toastr[type](msg, title, { timeOut: 3000, positionClass: 'toast-bottom-center', preventDuplicates: true });
+
+    },
+
+    response(ret, target, event){
+
+      window.dispatchEvent(new CustomEvent(event, { detail: { target: target, result: ret } }));
 
     },
 
@@ -182,56 +209,34 @@
     getAllItems(source) {
 
       var db = this._db;
-      db.items
+      return db.items
         .orderBy('date')
         .reverse()
         .toArray()
         .then(this.parseItems.bind(this))
         .then(function (items) {
-          window.dispatchEvent(new CustomEvent('getAllItems', {
-            detail: {
-              target: source,
-              items: items
-            }
-          }));
+          return items;
         })
-        .catch((function (reason) {
-          // Typically, there is no item in category.
-          window.dispatchEvent(new CustomEvent('getAllItems', {
-            detail: {
-              target: source,
-              items: null
-            }
-          }));
-        }).bind(this));
-     
+        .catch(function (reason) {
+          return null;
+        })
     },
 
     getItemsByYearMonth(source, year_month) {
 
       var db = this._db;
-      db.items
+      return db.items
         .where('date')
         .between(year_month + '-01', year_month + '-31', true, true)
         .toArray()
         .then(this.parseItems.bind(this))
         .then(function (items) {
-          window.dispatchEvent(new CustomEvent('getItemsByYearMonth', {
-            detail: {
-              target: source,
-              items: items
-            }
-          }));
+          return items;
         })
-        .catch((function (reason) {
-          // Typically, there is no item in category.
-          window.dispatchEvent(new CustomEvent('getItemsByYearMonth', {
-            detail: {
-              target: source,
-              items: null
-            }
-          }));
-        }).bind(this));
+        .catch(function (reason) {
+          // Typically, not found any item.
+          return null;
+        })
 
     },
 
@@ -239,19 +244,15 @@
 
       var db = this._db;
       id = parseInt(id);
-      db.items
+      return db.items
         .where('id')
         .equals(id)
         .toArray()
         .then(function (items) {
-          window.dispatchEvent(new CustomEvent('getItemById', {
-            detail: {
-              target: source,
-              item: items[0]
-            }
-          }))
+          return items[0];
         })
         .catch((function (reason) {
+          // It should not happen.
           this.showHint('error', 'Error', reason);
         }).bind(this));
 
@@ -346,26 +347,16 @@
     getAllCategories(data) {
 
       var db = this._db;
-      db.categories
+      return db.categories
         .orderBy('description')
         .reverse()
         .toArray()
         .then(function (categories) {
-          window.dispatchEvent(new CustomEvent('getAllCategories', {
-            detail: {
-              target: data.source,
-              categories: categories
-            }
-          }));
+          return categories;
         })
         .catch((function (reason) {
           // Typically, there is no item in category.
-          window.dispatchEvent(new CustomEvent('getAllCategories', {
-            detail: {
-              target: data.source,
-              categories: null
-            }
-          }));
+          return null;
         }).bind(this));
 
     },
@@ -374,17 +365,12 @@
 
       var db = this._db;
       id = parseInt(id);
-      db.categories
+      return db.categories
         .where('id')
         .equals(id)
         .toArray()
         .then(function (categories) {
-          window.dispatchEvent(new CustomEvent('getCategoryById', {
-            detail: {
-              target: source,
-              category: categories[0]
-            }
-          }))
+          return categories[0];
         })
         .catch((function (reason) {
           this.showHint('error', 'Error', reason);

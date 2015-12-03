@@ -25,7 +25,7 @@
           break;
         case 'getAllCategories':
           if (event.detail.target == 'page-category-home') {
-            this.setCategories(event.detail.categories);
+            this.setCategories(event.detail.result);
             this.draw();
           }
           break;
@@ -75,7 +75,6 @@
       var categories = this._categories;
       var self = this;
       
-      console.log(categories);
       categories.forEach(function (element) {
         var li = $('<li>', { 'class': 'list-group-item' });
         var btn = $('<button>', {

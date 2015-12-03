@@ -23,7 +23,7 @@
           break;
         case 'getAllCategories':
           if (event.detail.target == 'page-item-add') {
-            this.setCategories(event.detail.categories);
+            this.setCategories(event.detail.result);
             this.resetWrapper();
             this.draw();
           }

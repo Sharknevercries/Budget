@@ -28,7 +28,7 @@
           break;
         case 'getItemsByYearMonth':
           if (event.detail.target == 'page-home') {
-            var items = event.detail.items;
+            var items = event.detail.result;
             this.setItems(items);
             this.draw();
           }
