@@ -73,9 +73,14 @@
                   return [];
                 }).bind(this))
                 .then(this.parseItems.bind(this))
+                .catch((function (reason) {
+                  // should not happen
+                  this.showHint('error', 'Error', reason);
+                  return [];
+                }).bind(this))
                 .then((function (items) {
                   this.response(items, event.detail.source, event.type);
-                }).bind(this));
+                }).bind(this))
           }
           break;
         case 'getItemsByYearMonth':
@@ -90,6 +95,11 @@
                   return [];
                 })
                 .then(this.parseItems.bind(this))
+                .catch((function (reason) {
+                  // should not happen
+                  this.showHint('error', 'Error', reason);
+                  return [];
+                }).bind(this))
                 .then((function (items) {
                   this.response(items, event.detail.source, event.type);
                 }).bind(this));
@@ -285,34 +295,30 @@
 
       var db = this._db;
       return db.categories
-        .toArray()
-        .then((function (categories) {
+            .toArray()
+            .then((function (categories) {
 
-          var hashTable = {};
-          categories.forEach(function (element) {
-            hashTable[element['id']] = {};
-            hashTable[element['id']]['description'] = element['description'];
-            hashTable[element['id']]['color'] = element['color'];
-          })
-          items.forEach(function (element) {
-            var idx = element['category'];
-            if (!hashTable[idx]) {
-              element['category'] = hashTable[0]['description']; // Defualt value
-              element['color'] = hashTable[0]['color'];
-            }
-            else {
-              element['category'] = hashTable[idx]['description'];
-              element['color'] = hashTable[idx]['color'];
-            }
-          });
-          return items;
+              var hashTable = {};
+              categories.forEach(function (element) {
+                hashTable[element['id']] = {};
+                hashTable[element['id']]['description'] = element['description'];
+                hashTable[element['id']]['color'] = element['color'];
+              })
+              items.forEach(function (element) {
+                var idx = element['category'];
+                if (!hashTable[idx]) {
+                  element['category'] = "Others"; // Defualt value
+                  element['color'] = "grey";
+                }
+                else {
+                  element['category'] = hashTable[idx]['description'];
+                  element['color'] = hashTable[idx]['color'];
+                }
+              });
+              return items;
 
-        }).bind(this))
-        .catch((function (reason) {
-          // It should not happen.
-          this.showHint('error', 'Error', reason);
-          return [];
-        }).bind(this));
+            }).bind(this))
+        
 
     },
 

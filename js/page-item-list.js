@@ -67,31 +67,36 @@
 
     },
 
+    calculateYearMonthSum(items){
+
+      var dateList = {};
+
+      items.forEach(function (element) {
+        var idx = element.date.substr(0, 7);
+        if (!dateList[idx]) {
+          dateList[idx] = {};
+          dateList[idx]['sum'] = 0;
+          dateList[idx]['items'] = [];
+        }
+        dateList[idx]['items'].push(element);
+        dateList[idx]['sum'] += parseInt(element.price);
+      });
+
+      return dateList;
+
+    },
+
     drawData() {
 
       var items = this._items;
-      var self = this;
-
-      var idxs = [];
-      var dateList = {};
 
       if (items.length > 0) {
 
-        items.forEach(function (element) {
-          var idx = element.date.substr(0, 7);
-          if (!dateList[idx]) {
-            dateList[idx] = {};
-            dateList[idx]['sum'] = 0;
-            dateList[idx]['items'] = [];
-            idxs.push(idx);
-          }
-          dateList[idx]['items'].push(element);
-          dateList[idx]['sum'] += parseInt(element.price);
-        });
+        this._dateList = this.calculateYearMonthSum(items);
+        var self = this;
+        var dateList = this._dateList;
 
-        this._dateList = dateList;
-
-        idxs.forEach(function (element, idx) {
+        Object.keys(dateList).forEach(function (element, idx) {
 
           var panel = $('<div>', { class: 'panel panel-material-grey' });
 
@@ -105,13 +110,16 @@
             'class': 'btn btn-default btn-block',
             'click': self.accordionClick.bind(self)
           })
-          var panelHeadingText1 = $('<div>', { 'class': 'col-xs-6' }).append(
+          var panelHeadingText1 = $('<div>', { 'class': 'col-xs-2' }).append(
             $('<h4>', { 'class': 'text-left' }).append(
               $('<i>', { 'class': 'fa fa-chevron-down' })
-            ).append(document.createTextNode(element))
+            )
           );
-          var panelHeadingText2 = $('<div>', { 'class': 'col-xs-6' }).append($('<h4>', { 'class': 'text-right', 'text': dateList[element]['sum'] + '$' }));
-          panelHeadingButton.append(panelHeadingText1).append(panelHeadingText2);
+          var panelHeadingText2 = $('<div>', { 'class': 'col-xs-4' }).append(
+            $('<h4>', { 'class': 'text-left' }).append(document.createTextNode(element))
+          );
+          var panelHeadingText3 = $('<div>', { 'class': 'col-xs-6' }).append($('<h4>', { 'class': 'text-right', 'text': dateList[element]['sum'] + '$' }));
+          panelHeadingButton.append(panelHeadingText1).append(panelHeadingText2).append(panelHeadingText3);
           panelHeading.append(panelHeadingButton);
 
           var panelContent = $('<div>', {
@@ -175,11 +183,11 @@
 
     changeArrow(event) {
       var e = event.target;
-      var arrow = $(e).parent().find('.panel-heading span');
+      var arrow = $(e).parent().find('.panel-heading i');
       if ($(e).hasClass('show'))
-        $(arrow).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
+        $(arrow).removeClass('fa-chevron-down').addClass('fa-chevron-right');
       else
-        $(arrow).removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down');
+        $(arrow).removeClass('fa-chevron-right').addClass('fa-chevron-down');
     },
 
     accordionClick(event) {

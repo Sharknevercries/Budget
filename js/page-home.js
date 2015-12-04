@@ -72,13 +72,10 @@
 
     },
 
-    drawData() {
+    calculateCategoriesInfo(items){
 
-      var items = this._items;
       var totalSum = 0;
       var categoryInfo = {};
-      var maxCategorySum = 0;
-
       items.forEach(function (element) {
         var idx = element.category;
         if (!categoryInfo[idx]) {
@@ -88,7 +85,17 @@
         }
         categoryInfo[idx]['sum'] += element.price;
         totalSum += element.price;
-      });      
+      });
+
+      return { categoryInfo, totalSum };
+
+    },
+
+    drawData() {
+
+      var ret = this.calculateCategoriesInfo(this._items);
+      var totalSum = ret['totalSum'];
+      var categoryInfo = ret['categoryInfo'];
 
       $('#title').append(
         $('<h3>', { 'class': 'text-center', 'text': this._monthParser[(new Date()).getMonth()] })
@@ -98,6 +105,7 @@
 
       if (Object.keys(categoryInfo).length > 0) {
 
+        var maxCategorySum = 0;
         Object.keys(categoryInfo).forEach(function (element) {
           if (maxCategorySum < categoryInfo[element]['sum'])
             maxCategorySum = categoryInfo[element]['sum'];

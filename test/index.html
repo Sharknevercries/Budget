@@ -1,0 +1,35 @@
+﻿<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  <link href="../node_modules/mocha/mocha.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <script src="../js/jquery-1.10.2.min.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script>mocha.setup('bdd')</script>
+  <script src="tests.js"></script>
+
+    <script src="../js/Dexie.min.js"></script>
+    <script src="../js/database.js"></script>
+    <script src="../js/page-controller.js"></script>
+    <script src="../js/page-home.js"></script>
+    <script src="../js/page-item-list.js"></script>
+    <script src="../js/page-item-add.js"></script>
+    <script src="../js/page-item-edit.js"></script>
+    <script src="../js/page-config.js"></script>
+    <script src="../js/page-category-home.js"></script>
+    <script src="../js/page-category-add.js"></script>
+    <script src="../js/page-category-edit.js"></script>
+    <script src="../js/page-about.js"></script>
+
+  <script>
+    mocha.checkLeaks();
+    mocha.globals(['jQuery']);
+    mocha.run();
+  </script>
+</body>
+</html>
