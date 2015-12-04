@@ -19,17 +19,43 @@
         //
 
         case 'addItem':
-          this.addItem(event.detail);              
+          this.addItem(event.detail)
+              .then((function () {
+                this.showHint('success', 'Success', 'Add a record.');
+              }).bind(this))
+              .catch((function (reason) {
+                this.showHint('error', 'Error', reason);
+              }).bind(this));
           break;
         case 'delItem':
-          this.delItem(event.detail.id);
+          this.delItem(event.detail.id)
+              .then((function () {
+                this.showHint('success', 'Success', 'Delete the record.');
+              }).bind(this))
+              .catch((function (reason) {
+                this.showHint('error', 'Error', reason);
+              }).bind(this));
           break;
         case 'editItem':
-          this.editItem(event.detail);
+          this.editItem(event.detail)
+              .then((function () {
+                this.showHint('success', 'Success', 'Edit the record.');
+              }).bind(this))
+              .catch((function (reason) {
+                this.showHint('error', 'Error', reason);
+              }).bind(this));
           break;
         case 'getItemById':
           if (event.detail.target == 'database') {
             this.getItemById(event.detail.id)
+                .then(function (items) {
+                  return items[0];
+                })
+                .catch((function (reason) {
+                  // It should not happen.
+                  this.showHint('error', 'Error', reason);
+                  return [];
+                }).bind(this))
                 .then((function (item) {
                   this.response(item, event.detail.source, event.type);
                 }).bind(this));
@@ -38,6 +64,14 @@
         case 'getAllItems':
           if (event.detail.target == 'database') {
             this.getAllItems()
+                .then(function (items) {
+                  return items;
+                })
+                .catch((function (reason) {
+                  // should not happen
+                  this.showHint('error', 'Error', reason);
+                  return [];
+                }).bind(this))
                 .then(this.parseItems.bind(this))
                 .then((function (items) {
                   this.response(items, event.detail.source, event.type);
@@ -47,9 +81,16 @@
         case 'getItemsByYearMonth':
           if (event.detail.target == 'database') {
             this.getItemsByYearMonth(event.detail.year_month)
+                .then(function (items) {
+                    return items;
+                  })
+                .catch(function (reason) {
+                  // should not happen
+                  this.showHint('error', 'Error', reason);
+                  return [];
+                })
                 .then(this.parseItems.bind(this))
                 .then((function (items) {
-                  console.log(items);
                   this.response(items, event.detail.source, event.type);
                 }).bind(this));
           }
@@ -62,17 +103,43 @@
         //
 
         case 'addCategory':
-          this.addCategory(event.detail);
+          this.addCategory(event.detail)
+              .then((function () {
+                this.showHint('success', 'Success', 'Add a category.');
+              }).bind(this))
+              .catch((function (reason) {
+                this.showHint('error', 'Error', reason);
+              }).bind(this))
           break;
         case 'editCategory':
-          this.editCategory(event.detail);
+          this.editCategory(event.detail)
+              .then((function () {
+                this.showHint('success', 'Success', 'Edit the category.');
+              }).bind(this))
+              .catch((function (reason) {
+                this.showHint('error', 'Error', reason);
+              }).bind(this))
           break;
         case 'delCategory':
-          this.delCategory(event.detail.id);
+          this.delCategory(event.detail.id)
+              .then((function () {
+                this.showHint('success', 'Success', 'Delete the category.');
+              }).bind(this))
+              .catch((function (reason) {
+                this.showHint('error', 'Error', reason);
+              }).bind(this))
           break;
         case 'getAllCategories':
           if (event.detail.target == 'database') {
             this.getAllCategories()
+                .then(function (categories) {
+                  return categories;
+                })
+                .catch((function (reason) {
+                  // It should not happen.
+                  this.showHint('error', 'Error', reason);
+                  return [];
+                }).bind(this))
                 .then((function (categories) {
                   this.response(categories, event.detail.source, event.type);
                 }).bind(this));
@@ -81,6 +148,14 @@
         case 'getCategoryById':
           if (event.detail.target == 'database') {
             this.getCategoryById(event.detail.id)
+                .then(function (categories) {
+                  return categories[0];
+                })
+                .catch((function (reason) {
+                  // It should not happen.
+                  this.showHint('error', 'Error', reason);
+                  return [];
+                }).bind(this))
                 .then((function (category) {
                   this.response(category, event.detail.source, event.type);
                 }).bind(this));
@@ -119,7 +194,6 @@
       db.open();      
       
       this.addDefaultCategory();
-      this.updateCategoriesList();
 
     },
 
@@ -160,13 +234,7 @@
       var date = data.date;
       var description = data.description;
 
-      db.items.add({ category: category, date: date, price: price, description: description })
-        .then((function () {
-          this.showHint('success', 'Success', 'Add a record.');
-        }).bind(this))
-        .catch((function (reason) {
-          this.showHint('error', 'Error', reason);
-        }).bind(this));
+      return db.items.add({ category: category, date: date, price: price, description: description })
 
     },
 
@@ -174,16 +242,7 @@
 
       var db = this._db;
       id = parseInt(id);
-      db.items
-        .where('id')
-        .equals(id)
-        .delete()
-        .then((function () {
-          this.showHint('success', 'Success', 'Delete the record.');
-        }).bind(this))
-        .catch((function (reason) {
-          this.showHint('error', 'Error', reason);
-        }).bind(this));
+      return db.items.where('id').equals(id).delete()
 
     },
 
@@ -195,67 +254,31 @@
       var category = parseInt(data.category);
       var date = data.date;
       var description = data.description;
-      db.items
-        .where('id')
-        .equals(id)
-        .modify({ price: price, category: category, date: date, description: description })
-        .then((function () {
-          this.showHint('success', 'Success', 'Edit the record.');
-        }).bind(this))
-        .catch((function (reason) {
-          this.showHint('error', 'Error', reason);
-        }).bind(this));
+      return db.items.where('id').equals(id).modify({ price: price, category: category, date: date, description: description })
+        
 
     },
 
     getAllItems() {
 
       var db = this._db;
-      return db.items
-        .orderBy('date')
-        .reverse()
-        .toArray()
-        .then(function (items) {
-          return items;
-        })
-        .catch(function (reason) {
-          return null;
-        })
+      return db.items.orderBy('date').reverse().toArray()
+
     },
 
     getItemsByYearMonth(year_month) {
 
       var db = this._db;
-      return db.items
-        .where('date')
-        .between(year_month + '-01', year_month + '-31', true, true)
-        .toArray()
-        .then(function (items) {
-          return items;
-        })
-        .catch(function (reason) {
-          // Typically, not found any item.
-          return null;
-        })
-
+      return db.items.where('date').between(year_month + '-01', year_month + '-31', true, true).reverse().toArray()
+        
     },
 
     getItemById(id){
 
       var db = this._db;
       id = parseInt(id);
-      return db.items
-        .where('id')
-        .equals(id)
-        .toArray()
-        .then(function (items) {
-          return items[0];
-        })
-        .catch((function (reason) {
-          // It should not happen.
-          this.showHint('error', 'Error', reason);
-        }).bind(this));
-
+      return db.items.where('id').equals(id).toArray()
+        
     },
     
     parseItems(items) {
@@ -286,7 +309,9 @@
 
         }).bind(this))
         .catch((function (reason) {
+          // It should not happen.
           this.showHint('error', 'Error', reason);
+          return [];
         }).bind(this));
 
     },
@@ -303,13 +328,7 @@
       var color = data.color;
       var description = data.description;
 
-      db.categories.add({ color: color, description: description })
-        .then((function () {
-          this.showHint('success', 'Success', 'Add a category.');
-        }).bind(this))
-        .catch((function (reason) {
-          this.showHint('error', 'Error', reason);
-        }).bind(this))
+      return db.categories.add({ color: color, description: description })        
 
     },
 
@@ -319,17 +338,7 @@
       var id = parseInt(data.id);
       var color = data.color;
       var description = data.description;
-      console.log(data);
-      db.categories
-        .where('id')
-        .equals(id)
-        .modify({ color: color, description: description })
-        .then((function () {
-          this.showHint('success', 'Success', 'Edit the category.');
-        }).bind(this))
-        .catch((function (reason) {
-          this.showHint('error', 'Error', reason);
-        }).bind(this))
+      return db.categories.where('id').equals(id).modify({ color: color, description: description })
 
     },
 
@@ -337,33 +346,15 @@
 
       var db = this._db;
       id = parseInt(id);
-      db.categories
-        .where('id')
-        .equals(id)
-        .delete()
-        .then((function () {
-          this.showHint('success', 'Success', 'Delete the category.');
-        }).bind(this))
-        .catch((function (reason) {
-          this.showHint('error', 'Error', reason);
-        }).bind(this))
-
+      return db.categories.where('id').equals(id).delete()
+        
     },
 
     getAllCategories() {
 
       var db = this._db;
-      return db.categories
-        .orderBy('description')
-        .reverse()
-        .toArray()
-        .then(function (categories) {
-          return categories;
-        })
-        .catch((function (reason) {
-          // Typically, there is no item in category.
-          return null;
-        }).bind(this));
+      return db.categories.orderBy('description').reverse().toArray()
+        
 
     },
 
@@ -371,31 +362,8 @@
 
       var db = this._db;
       id = parseInt(id);
-      return db.categories
-        .where('id')
-        .equals(id)
-        .toArray()
-        .then(function (categories) {
-          return categories[0];
-        })
-        .catch((function (reason) {
-          this.showHint('error', 'Error', reason);
-        }).bind(this));
-
-    },
-
-    updateCategoriesList() {
-
-      var db = this._db;
-      db.categories
-        .toArray()
-        .then((function (categories) {
-          this._categoriesList = categories;
-        }).bind(this))
-        .catch((function (reason) {
-          this.showHint('error', 'Error', reason);
-        }).bind(this));
-
+      return db.categories.where('id').equals(id).toArray()
+        
     }
 
   }
